@@ -1,662 +1,267 @@
 ---
-# try also 'default' to start simple
-theme: seriph
-# random image from a curated Unsplash collection by Anthony
-# like them? see https://unsplash.com/collections/94734566/slidev
-# background: https://cover.sli.dev
-# some information about your slides (markdown enabled)
-title: Welcome to Slidev
-info: |
-  ## Slidev Starter Template
-  Presentation slides for developers.
-
-  Learn more at [Sli.dev](https://sli.dev)
-# apply UnoCSS classes to the current slide
+theme: default
+title: linalg-checker
+info:
 class: text-center
-# https://sli.dev/features/drawing
 drawings:
   persist: false
-# slide transition: https://sli.dev/guide/animations.html#slide-transitions
 transition: slide-left
-# enable Comark Syntax: https://comark.dev/syntax/markdown
 comark: true
-# duration of the presentation
-duration: 35min
 ---
 
-# Welcome to Slidev
+# `linalg-checker`
 
-Presentation slides for developers
+Lightweight checking for undergraduate-level finite-dimensional linear algebra
 
-<div @click="$slidev.nav.next" class="mt-12 py-1" hover:bg="white op-10">
-  Press Space for next page <carbon:arrow-right />
-</div>
-
-<div class="abs-br m-6 text-xl">
-  <button @click="$slidev.nav.openInEditor()" title="Open in Editor" class="slidev-icon-btn">
-    <carbon:edit />
-  </button>
-  <a href="https://github.com/slidevjs/slidev" target="_blank" class="slidev-icon-btn">
-    <carbon:logo-github />
-  </a>
-</div>
-
-<!--
-The last comment block of each slide will be treated as slide notes. It will be visible and editable in Presenter Mode along with the slide. [Read more in the docs](https://sli.dev/guide/syntax.html#notes)
--->
-
----
-transition: fade-out
----
-
-# What is Slidev?
-
-Slidev is a slides maker and presenter designed for developers, consist of the following features
-
-- 📝 **Text-based** - focus on the content with Markdown, and then style them later
-- 🎨 **Themable** - themes can be shared and re-used as npm packages
-- 🧑‍💻 **Developer Friendly** - code highlighting, live coding with autocompletion
-- 🤹 **Interactive** - embed Vue components to enhance your expressions
-- 🎥 **Recording** - built-in recording and camera view
-- 📤 **Portable** - export to PDF, PPTX, PNGs, or even a hostable SPA
-- 🛠 **Hackable** - virtually anything that's possible on a webpage is possible in Slidev
-<br>
-<br>
-
-Read more about [Why Slidev?](https://sli.dev/guide/why)
-
-<!--
-You can have `style` tag in markdown to override the style for the current page.
-Learn more: https://sli.dev/features/slide-scope-style
--->
-
-<style>
-h1 {
-  background-color: #2B90B6;
-  background-image: linear-gradient(45deg, #4EC5D4 10%, #146b8c 20%);
-  background-size: 100%;
-  -webkit-background-clip: text;
-  -moz-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  -moz-text-fill-color: transparent;
-}
-</style>
-
-<!--
-Here is another comment.
--->
-
----
-transition: slide-up
-level: 2
----
-
-# Navigation
-
-Hover on the bottom-left corner to see the navigation's controls panel, [learn more](https://sli.dev/guide/ui#navigation-bar)
-
-## Keyboard Shortcuts
-
-|                                                     |                             |
-| --------------------------------------------------- | --------------------------- |
-| <kbd>right</kbd> / <kbd>space</kbd>                 | next animation or slide     |
-| <kbd>left</kbd>  / <kbd>shift</kbd><kbd>space</kbd> | previous animation or slide |
-| <kbd>up</kbd>                                       | previous slide              |
-| <kbd>down</kbd>                                     | next slide                  |
-
-<!-- https://sli.dev/guide/animations.html#click-animation -->
-<img
-  v-click
-  class="absolute -bottom-9 -left-7 w-80 opacity-50"
-  src="https://sli.dev/assets/arrow-bottom-left.svg"
-  alt=""
-/>
-<p v-after class="absolute bottom-23 left-45 opacity-30 transform -rotate-10">Here!</p>
-
----
-layout: two-cols
-layoutClass: gap-16
----
-
-# Table of contents
-
-You can use the `Toc` component to generate a table of contents for your slides:
-
-```html
-<Toc minDepth="1" maxDepth="1" />
-```
-
-The title will be inferred from your slide content, or you can override it with `title` and `level` in your frontmatter.
-
-::right::
-
-<Toc text-sm minDepth="1" maxDepth="2" />
-
----
-layout: image-right
-image: https://cover.sli.dev
----
-
-# Code
-
-Use code snippets and get the highlighting directly, and even types hover!
-
-```ts [filename-example.ts] {all|4|6|6-7|9|all} twoslash
-// TwoSlash enables TypeScript hover information
-// and errors in markdown code blocks
-// More at https://shiki.style/packages/twoslash
-import { computed, ref } from 'vue'
-
-const count = ref(0)
-const doubled = computed(() => count.value * 2)
-
-doubled.value = 2
-```
-
-<arrow v-click="[4, 5]" x1="350" y1="310" x2="195" y2="342" color="#953" width="2" arrowSize="1" />
-
-<!-- This allow you to embed external code blocks -->
-<<< @/snippets/external.ts#snippet
-
-<!-- Footer -->
-
-[Learn more](https://sli.dev/features/line-highlighting)
-
-<!-- Inline style -->
-<style>
-.footnotes-sep {
-  @apply mt-5 opacity-10;
-}
-.footnotes {
-  @apply text-sm opacity-75;
-}
-.footnote-backref {
-  display: none;
-}
-</style>
-
-<!--
-Notes can also sync with clicks
-
-[click] This will be highlighted after the first click
-
-[click] Highlighted with `count = ref(0)`
-
-[click:3] Last click (skip two clicks)
--->
-
----
-level: 2
----
-
-# Shiki Magic Move
-
-Powered by [shiki-magic-move](https://shiki-magic-move.netlify.app/), Slidev supports animations across multiple code snippets.
-
-Add multiple code blocks and wrap them with <code>````md magic-move</code> (four backticks) to enable the magic move. For example:
-
-````md magic-move {lines: true}
-```ts {*|2|*}
-// step 1
-const author = reactive({
-  name: 'John Doe',
-  books: [
-    'Vue 2 - Advanced Guide',
-    'Vue 3 - Basic Guide',
-    'Vue 4 - The Mystery'
-  ]
-})
-```
-
-```ts {*|1-2|3-4|3-4,8}
-// step 2
-export default {
-  data() {
-    return {
-      author: {
-        name: 'John Doe',
-        books: [
-          'Vue 2 - Advanced Guide',
-          'Vue 3 - Basic Guide',
-          'Vue 4 - The Mystery'
-        ]
-      }
-    }
-  }
-}
-```
-
-```ts
-// step 3
-export default {
-  data: () => ({
-    author: {
-      name: 'John Doe',
-      books: [
-        'Vue 2 - Advanced Guide',
-        'Vue 3 - Basic Guide',
-        'Vue 4 - The Mystery'
-      ]
-    }
-  })
-}
-```
-
-Non-code blocks are ignored.
-
-```vue
-<!-- step 4 -->
-<script setup>
-const author = {
-  name: 'John Doe',
-  books: [
-    'Vue 2 - Advanced Guide',
-    'Vue 3 - Basic Guide',
-    'Vue 4 - The Mystery'
-  ]
-}
-</script>
-```
-````
+<!-- Disclaimer: I am not saying that we should use the code base that I have been working on. This is a prototype. The point is to share what I think I learned from tinkering with it. -->
 
 ---
 
-# Components
+## Original motivation (perhaps naive)
 
-<div grid="~ cols-2 gap-4">
-<div>
-
-You can use Vue components directly inside your slides.
-
-We have provided a few built-in components like `<Tweet/>`, `<BlueSky/>`, and `<Youtube/>` that you can use directly. And adding your custom components is also super easy.
-
-```html
-<Counter :count="10" />
-```
-
-<!-- ./components/Counter.vue -->
-<Counter :count="10" m="t-4" />
-
-Check out [the guides](https://sli.dev/builtin/components.html) for more.
-
-</div>
-<div>
-
-```html
-<Tweet id="1390115482657726468" />
-```
-
-<Tweet id="1390115482657726468" scale="0.65" />
-
-</div>
-</div>
-
-<!--
-Presenter note with **bold**, *italic*, and ~~striked~~ text.
-
-Also, HTML elements are valid:
-<div class="flex w-full">
-  <span style="flex-grow: 1;">Left content</span>
-  <span>Right content</span>
-</div>
--->
-
----
-class: px-20
----
-
-# Themes
-
-Slidev comes with powerful theming support. Themes can provide styles, layouts, components, or even configurations for tools. Switching between themes by just **one edit** in your frontmatter:
-
-<div grid="~ cols-2 gap-2" m="t-2">
-
-```yaml
----
-theme: default
----
-```
-
-```yaml
----
-theme: seriph
----
-```
-
-<img border="rounded" src="https://github.com/slidevjs/themes/blob/main/screenshots/theme-default/01.png?raw=true" alt="">
-
-<img border="rounded" src="https://github.com/slidevjs/themes/blob/main/screenshots/theme-seriph/01.png?raw=true" alt="">
-
-</div>
-
-Read more about [How to use a theme](https://sli.dev/guide/theme-addon#use-theme) and
-check out the [Awesome Themes Gallery](https://sli.dev/resources/theme-gallery).
+- When people write proofs, they usually assert **universally quantified statements** $\forall n_1, n_2, \dots, x_1, x_2, \dots \,, \phi(n_1, n_2, \dots, x_1, x_2, \dots)$
+- **Naively,** I said: "existentially quantified statements are easy to prove! **Just** fuzz and exhibit a witness like software testing folks do"
+- Proving student-written claims true is an unsatisfactory solution on its own
+  - It costs latency/$$$ to try to **prove falsehoods**
 
 ---
 
-# Clicks Animations
+<!-- ## Original motivation (naive) -->
 
-You can add `v-click` to elements to add a click animation.
+- Problem 1: Witnesses involve real numbers?
+  - Naive answer: Fuzz over $\mathbb Q$
+  - Other answer: Fuzz over the closure of $\mathbb Q$ under $\sqrt \cdot$
+- Problem 2: Hypotheses (e.g. equational constraints) will be satisfied w.p. 0?
+  - Set of witnesses has measure 0?
+  - Fuzzing only checks points
 
-<div v-click>
-
-This shows up when you press <kbd>space</kbd> or <kbd>right</kbd>, or click outside the slide on the right.
-
-```html
-<div v-click>This shows up when you trigger a click animation.</div>
-```
-
-</div>
-
-<p v-click>
-You can also add modifiers to change the animation:
-</p>
-
-<div class="grid gap-3 mt-4 text-sm" style="grid-template-columns: repeat(3, 1fr) 1.5fr 1fr">
-  <div v-after.up class="p-3 rounded border border-primary/20 bg-primary/10">
-    <div class="font-mono text-xs opacity-60 mb-1">v-click.up</div>
-    <div>Slide from bottom</div>
-  </div>
-  <div v-click.fade-in class="p-3 rounded border border-primary/30 bg-primary/15">
-    <div class="font-mono text-xs opacity-60 mb-1">v-click.fade-in</div>
-    <div>Fade in</div>
-  </div>
-  <div v-click.fade class="p-3 rounded border border-primary/40 bg-primary/20">
-    <div class="font-mono text-xs opacity-60 mb-1">v-click.fade</div>
-    <div>Dim (0.5 opacity)</div>
-  </div>
-  <div v-click.fade.right.scale class="p-3 rounded border border-primary/50 bg-primary/25">
-    <div class="font-mono text-xs opacity-60 mb-1">v-click.fade.right.scale</div>
-    <div>Composed</div>
-  </div>
-  <div v-click.none class="p-3 rounded border border-primary/60 bg-primary/30">
-    <div class="font-mono text-xs opacity-60 mb-1">v-click.none</div>
-    <div>No transition</div>
-  </div>
-</div>
-
-<v-click>
-
-The <span v-mark.red="7"><code>v-mark</code> directive</span>
-also allows you to add
-<span v-mark.circle.orange="8">inline marks</span>
-, powered by [Rough Notation](https://roughnotation.com/):
-
-```html
-<span v-mark.underline.orange>inline markers</span>
-```
-
-</v-click>
-
-<div v-click mt-12>
-
-[Learn more](https://sli.dev/guide/animations#click-animation)
-
-</div>
+<!-- todo: visualize points floating above/below lower-dimensional manifold -->
 
 ---
 
-# Motions
+## Actual motivation
 
-Motion animations are powered by [@vueuse/motion](https://motion.vueuse.org/), triggered by `v-motion` directive.
-
-```html
-<div
-  v-motion
-  :initial="{ x: -80 }"
-  :enter="{ x: 0 }"
-  :click-3="{ x: 80 }"
-  :leave="{ x: 1000 }"
->
-  Slidev
-</div>
-```
-
-<div class="w-60 relative">
-  <div class="relative w-40 h-40">
-    <img
-      v-motion
-      :initial="{ x: 800, y: -100, scale: 1.5, rotate: -50 }"
-      :enter="final"
-      class="absolute inset-0"
-      src="https://sli.dev/logo-square.png"
-      alt=""
-    />
-    <img
-      v-motion
-      :initial="{ y: 500, x: -100, scale: 2 }"
-      :enter="final"
-      class="absolute inset-0"
-      src="https://sli.dev/logo-circle.png"
-      alt=""
-    />
-    <img
-      v-motion
-      :initial="{ x: 600, y: 400, scale: 2, rotate: 100 }"
-      :enter="final"
-      class="absolute inset-0"
-      src="https://sli.dev/logo-triangle.png"
-      alt=""
-    />
-  </div>
-
-  <div
-    class="text-5xl absolute top-14 left-40 text-[#2B90B6] -z-1"
-    v-motion
-    :initial="{ x: -80, opacity: 0}"
-    :enter="{ x: 0, opacity: 1, transition: { delay: 2000, duration: 1000 } }">
-    Slidev
-  </div>
-</div>
-
-<!-- vue script setup scripts can be directly used in markdown, and will only affects current page -->
-<script setup lang="ts">
-const final = {
-  x: 0,
-  y: 0,
-  rotate: 0,
-  scale: 1,
-  transition: {
-    type: 'spring',
-    damping: 10,
-    stiffness: 20,
-    mass: 2
-  }
-}
-</script>
-
-<div
-  v-motion
-  :initial="{ x:35, y: 30, opacity: 0}"
-  :enter="{ y: 0, opacity: 1, transition: { delay: 3500 } }">
-
-[Learn more](https://sli.dev/guide/animations.html#motion)
-
-</div>
+- 100% correctness is not the most important goal in education
+  - In fact it is seldom as important a goal as many formal methods researchers wish to believe
+<!-- - Disproving is naturally expressed as deciding an **existentially quantified formula** $\exists x_1, x_2, \dots \, \neg\phi(x_1, x_2, \dots)$ -->
+- **There will always be "easy" problems** for which symbolic/non-neural algorithms are already **much** cheaper/more responsive than LLMs will ever be
+- At the undergrad level, **we are interested in "easy" problems**
+  - maybe even decidable!
+  - Or translatable or "closely" under/over-approximable by decidable problems
+- **What if our system based on SoTA tech is 10 years behind SoTA performance?**
 
 ---
 
-# $\LaTeX$
+## QFRA example: Squaring nonnegative numbers is monotone
 
-$\LaTeX$ is supported out-of-box. Powered by [$\KaTeX$](https://katex.org/).
+Given:
 
-<div h-3 />
+- $x \in \mathbb{R}$
+- $y \in \mathbb{R}$
+- $0 \le x$
+- $x \le y$
 
-Inline $\sqrt{3x-1}+(1+x)^2$
+WTS $x^{2} \le y^{2}$
 
-Block
-$$ {1|3|all}
-\begin{aligned}
-\nabla \cdot \vec{E} &= \frac{\rho}{\varepsilon_0} \\
-\nabla \cdot \vec{B} &= 0 \\
-\nabla \times \vec{E} &= -\frac{\partial\vec{B}}{\partial t} \\
-\nabla \times \vec{B} &= \mu_0\vec{J} + \mu_0\varepsilon_0\frac{\partial\vec{E}}{\partial t}
-\end{aligned}
-$$
+<details>
+<summary>✅ verified</summary>
 
-[Learn more](https://sli.dev/features/latex)
+This follows from the following facts:
+
+- $0 \le \left(y - x\right) \left(x + y\right)$
+</details>
+
+1. $0 \le y$
+
+   <details>
+   <summary>✅ verified</summary>
+
+   This follows from the following facts:
+
+   - $0 \le x$
+   - $x \le y$
+   </details>
+2. $0 \le y - x$
+
+   <details>
+   <summary>✅ verified</summary>
+
+   This follows from the following facts:
+
+   - $x \le y$
+   </details>
+3. $0 \le \left(y - x\right) \left(x + y\right)$
+
+   <details>
+   <summary>✅ verified</summary>
+
+   This follows from the following facts:
+
+   - $0 \le x$
+   - $x \le y$
+   </details>
+4. $0 \le y^{2} - x^{2}$
+
+   <details>
+   <summary>✅ verified</summary>
+
+   This follows from the following facts:
+
+   - $0 \le \left(y - x\right) \left(x + y\right)$
+   </details>
 
 ---
 
-# Diagrams
+## Example w/ dimensions: Orthogonal matrices preserve squared length
 
-You can create diagrams / graphs from textual descriptions, directly in your Markdown.
+Given:
 
-<div class="grid grid-cols-4 gap-5 pt-4 -mb-6">
+- $U \in \mathbb{R}^{n \times n}$
+- $x \in \mathbb{R}^{n}$
+- $U^\top U = I$
 
-```mermaid {scale: 0.5, alt: 'A simple sequence diagram'}
-sequenceDiagram
-    Alice->John: Hello John, how are you?
-    Note over Alice,John: A typical interaction
-```
+WTS $\left\lVert U x \right\rVert_{2}^{2} = \left\lVert x \right\rVert_{2}^{2}$
 
-```mermaid {theme: 'neutral', scale: 0.8}
-graph TD
-B[Text] --> C{Decision}
-C -->|One| D[Result 1]
-C -->|Two| E[Result 2]
+<details>
+<summary>✅ likely</summary>
+
+No counterexamples found up to a maximum dimension of 2.
+
+This may follow from the following facts:
+
+- $U^\top U = I$
+- $x^\top U^\top U x = x^\top I x$
+</details>
+
+1. $\left(U x\right)^\top U x = x^\top U^\top U x$
+
+   <details>
+   <summary>✅ likely</summary>
+
+   No counterexamples found up to a maximum dimension of 2.
+
+   No premises seemed necessary to show this.
+   </details>
+2. $x^\top U^\top U x = x^\top I x$
+
+   <details>
+   <summary>✅ likely</summary>
+
+   No counterexamples found up to a maximum dimension of 2.
+
+   This may follow from the following facts:
+
+   - $U^\top U = I$
+   </details>
+3. $x^\top I x = x^\top x$
+
+   <details>
+   <summary>✅ likely</summary>
+
+   No counterexamples found up to a maximum dimension of 2.
+
+   No premises seemed necessary to show this.
+   </details>
+
+<!-- todo: give the execution time on a 6-core laptop because this is the main difference wrt llm -->
+
+---
+
+## Architecture
+
+Core idea:
+
+```mermaid
+flowchart LR
+    DIMAGNOSTIC[dimension-agnostic rewrites]
+    DIMAGNOSTIC --> ENVIRONMENTENUM[dimension enumeration]
+    ENVIRONMENTENUM --> NONDIMAGNOSTIC[dimension-dependent rewrites]
+    NONDIMAGNOSTIC --> Z3[proof or cex]
 ```
 
 ```mermaid
-mindmap
-  root((mindmap))
-    Origins
-      Long history
-      ::icon(fa fa-book)
-      Popularisation
-        British popular psychology author Tony Buzan
-    Research
-      On effectiveness<br/>and features
-      On Automatic creation
-        Uses
-            Creative techniques
-            Strategic planning
-            Argument mapping
-    Tools
-      Pen and paper
-      Mermaid
-```
-
-```plantuml {scale: 0.7}
-@startuml
-
-package "Some Group" {
-  HTTP - [First Component]
-  [Another Component]
-}
-
-node "Other Groups" {
-  FTP - [Second Component]
-  [First Component] --> FTP
-}
-
-cloud {
-  [Example 1]
-}
-
-database "MySql" {
-  folder "This is my folder" {
-    [Folder 3]
-  }
-  frame "Foo" {
-    [Frame 4]
-  }
-}
-
-[Another Component] --> [Example 1]
-[Example 1] --> [Folder 3]
-[Folder 3] --> [Frame 4]
-
-@enduml
-```
-
-</div>
-
-Learn more: [Mermaid Diagrams](https://sli.dev/features/mermaid) and [PlantUML Diagrams](https://sli.dev/features/plantuml)
-
----
-foo: bar
-dragPos:
-  square: 691,32,167,_,-16
----
-
-# Draggable Elements
-
-Double-click on the draggable elements to edit their positions.
-
-<br>
-
-###### Directive Usage
-
-```md
-<img v-drag="'square'" src="https://sli.dev/logo.png">
-```
-
-<br>
-
-###### Component Usage
-
-```md
-<v-drag text-3xl>
-  <div class="i-carbon:arrow-up" />
-  Use the `v-drag` component to have a draggable container!
-</v-drag>
-```
-
-<v-drag pos="663,206,261,_,-15">
-  <div text-center text-3xl border border-main rounded>
-    Double-click me!
-  </div>
-</v-drag>
-
-<img v-drag="'square'" src="https://sli.dev/logo.png">
-
-###### Draggable Arrow
-
-```md
-<v-drag-arrow two-way />
-```
-
-<v-drag-arrow pos="67,452,253,46" two-way op70 />
-
----
-src: ./pages/imported-slides.md
-hide: false
----
-
----
-
-# Monaco Editor
-
-Slidev provides built-in Monaco Editor support.
-
-Add `{monaco}` to the code block to turn it into an editor:
-
-```ts {monaco}
-import { ref } from 'vue'
-import { emptyArray } from './external'
-
-const arr = ref(emptyArray(10))
-```
-
-Use `{monaco-run}` to create an editor that can execute the code directly in the slide:
-
-```ts {monaco-run}
-import { version } from 'vue'
-import { emptyArray, sayHello } from './external'
-
-sayHello()
-console.log(`vue ${version}`)
-console.log(emptyArray<number>(10).reduce(fib => [...fib, fib.at(-1)! + fib.at(-2)!], [1, 1]))
+flowchart LR
+    MD[Markdown / TeX] --> AST["Expr&lt;()&gt;"]
+    AST --> STE[SymbolicTypeEnvironment]
+    AST --> PREP[PreparedExpression]
+    STE --> PREP
+    PREP --> DIM[Dimension constraints]
+    DIM --> ENV[Environment]
+    PREP --> ELAB[Concrete elaboration]
+    ENV --> ELAB
+    ELAB --> Z3[Scalar-cell Z3 lowering]
+    Z3 --> SOLVE[Solver query]
+    SOLVE --> RESULT[Model, counterexample, or proof result]
 ```
 
 ---
-layout: center
-class: text-center
+
+## Regarding CNL
+
+- Not the core motivation.
+- Orthogonal to the SMT-solving/decision procedures aspect of this prototype
+- But perhaps independently interesting:
+  - Can choice of syntax cut the gordian knot of faithfulness?
+    - cosine similarity in embedding space as a poor faithfulness metric. Some directions in embedding space don't correspond to our application-specific notion of similarity?
+      - option 1: don't use the embeddings
+      - option 2: learn a regression model that predicts faithfulness from embeddings
+      - option 3: **eliminate/discourage differences along the irrelevant directions**
+
 ---
 
-# Learn More
+## What has "wide wall" done for us?
 
-[Documentation](https://sli.dev) · [GitHub](https://github.com/slidevjs/slidev) · [Showcases](https://sli.dev/resources/showcases)
+Related: "What has mathlib done for us?"
 
-<PoweredBySlidev mt-10 />
+- The appeal is obvious
+  - Without it, we are no better than unusable ITS of prior decades
+- The opportunity is obvious
+  - LLMs can accept almost any textual input
+  - Almost any proposition can be expressed using constructs from mathlib
+- **Feasibility**
+  - The implementation is here!
+    - or at least, it is close? pending library learning?
+  - "wide wall" QA/alignment remains aspirational
+- **Desirability**: "wide wall" might actually be the **worst thing** about LLM tutors?
+
+
+---
+
+## Types of guarantees
+
+Solve the following problem:
+- **Decide** linear algebra propositions with *bounded dimension* that can be expressed without quantifier alternation
+  - i.e.: prove or disprove
+- **Disprove** linear algebra propositions that can be expressed without quantifier alternation
+
+---
+
+## Future work
+
+- Generate Lean from linalg-checker IR
+  - Graceful handling of unsupported expressions (fall back to alternate path to Lean)
+
+---
+
+## Future work?
+
+- **Decide k-step provability** from finite collection of deduction rules + lemma library
+  - BMC-like approach to provability -- not just "use `aesop`"
+    - An excuse to work on theory of ADTs + theory combination?
+- **Generalize to a framework**
+  - related to ongoing library learning work
+  - Extension points:
+    - syntax: operator library w/ parse rules etc.
+    - rewrite library
+
+---
+
+## Future work: partial concretization?
+
+- Potential problem: QFRA could turn out to be slow, e.g. because counterexamples of small dimension may not exist
+- idea:
+  - if counterexamples of dimension $n$ are a manifold $W$ of dimension $k < n$,
+  - and you leave $d$ values symbolic while randomly setting the remaining values randomly,
+  - then the $d$-dimensional counterexample candidate space $U$ that the solver searches over
+  - may satisfy that $p(U \cap W) \neq 0$
+- In other words: concolic testing for math
