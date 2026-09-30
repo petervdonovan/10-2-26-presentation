@@ -127,6 +127,15 @@ This follows from the following facts:
    </details>
 
 ---
+
+## Types of guarantees
+
+Solve the following problem:
+- **Decide** linear algebra propositions with *bounded dimension* that can be expressed without quantifier alternation
+  - i.e.: prove or disprove
+- **Disprove** linear algebra propositions that can be expressed without quantifier alternation
+
+---
 layout: two-cols
 class: proof-example
 ---
@@ -407,17 +416,7 @@ Related: "What has mathlib done for us?"
   - The implementation is here!
     - or at least, it is close? pending library learning?
   - "wide wall" QA/alignment remains aspirational
-- **Desirability**: "wide wall" might actually be the **worst thing** about LLM tutors?
-
-
----
-
-## Types of guarantees
-
-Solve the following problem:
-- **Decide** linear algebra propositions with *bounded dimension* that can be expressed without quantifier alternation
-  - i.e.: prove or disprove
-- **Disprove** linear algebra propositions that can be expressed without quantifier alternation
+- **Desirability**: "wide wall" (taken to the extreme) might actually be the **worst thing** about LLM tutors?
 
 ---
 
