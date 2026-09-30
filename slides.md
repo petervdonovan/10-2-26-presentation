@@ -13,6 +13,15 @@ comark: true
 
 Lightweight checking for undergraduate-level finite-dimensional linear algebra
 
+---
+
+## Clarifications wrt scope
+
+- Clean-room implementation. No Leantutor IP used.
+  - Corollary: There is overlap and divergence from our existing implementation.
+- This is a prototype. Just because I worked on it doesn't mean I think we should use it.
+  - Corollary: Divergence from our existing implementation should be fine. It is just experimentation.
+
 <!-- Disclaimer: I am not saying that we should use the code base that I have been working on. This is a prototype. The point is to share what I think I learned from tinkering with it. -->
 
 ---
@@ -23,6 +32,8 @@ Lightweight checking for undergraduate-level finite-dimensional linear algebra
 - **Naively,** I said: "existentially quantified statements are easy to prove! **Just** fuzz and exhibit a witness like software testing folks do"
 - Proving student-written claims true is an unsatisfactory solution on its own
   - It costs latency/$$$ to try to **prove falsehoods**
+
+<img src="/cexes-points-cropped.png" alt="Candidate and actual counterexamples on a manifold" style="max-width: 70%; max-height: 40vh; height: auto; object-fit: contain; display: block; margin: 0 auto" />
 
 ---
 
@@ -41,15 +52,18 @@ Lightweight checking for undergraduate-level finite-dimensional linear algebra
 
 ## Actual motivation
 
-- 100% correctness is not the most important goal in education
-  - In fact it is seldom as important a goal as many formal methods researchers wish to believe
+- 100% correctness is usually not the most important goal in education
 <!-- - Disproving is naturally expressed as deciding an **existentially quantified formula** $\exists x_1, x_2, \dots \, \neg\phi(x_1, x_2, \dots)$ -->
 - **There will always be "easy" problems** for which symbolic/non-neural algorithms are already **much** cheaper/more responsive than LLMs will ever be
 - At the undergrad level, **we are interested in "easy" problems**
   - maybe even decidable!
   - Or translatable or "closely" under/over-approximable by decidable problems
-- **What if our system based on SoTA tech is 10 years behind SoTA performance?**
 
+**What if our system based on SoTA tech is 10 years behind SoTA performance?**
+
+---
+layout: two-cols
+class: proof-example
 ---
 
 ## QFRA example: Squaring nonnegative numbers is monotone
@@ -70,6 +84,8 @@ This follows from the following facts:
 
 - $0 \le \left(y - x\right) \left(x + y\right)$
 </details>
+
+::right::
 
 1. $0 \le y$
 
@@ -111,6 +127,9 @@ This follows from the following facts:
    </details>
 
 ---
+layout: two-cols
+class: proof-example
+---
 
 ## Example w/ dimensions: Orthogonal matrices preserve squared length
 
@@ -132,6 +151,8 @@ This may follow from the following facts:
 - $U^\top U = I$
 - $x^\top U^\top U x = x^\top I x$
 </details>
+
+::right::
 
 1. $\left(U x\right)^\top U x = x^\top U^\top U x$
 
@@ -163,36 +184,200 @@ This may follow from the following facts:
    No premises seemed necessary to show this.
    </details>
 
+---
+layout: two-cols
+class: proof-example
+---
+
+# Example: Formalizing input involving ellipses
+
+Given:
+
+- $n = 2$
+- $c \in \operatorname{Seq}_{n}(\mathbb{R})$
+- $d \in \operatorname{Seq}_{n}(\mathbb{R})$
+
+WTS $\operatorname{diag}(c) = \operatorname{diag}(c)$
+
+<details>
+<summary>✅ verified</summary>
+
+No premises seemed necessary to show this.
+</details>
+
+::right::
+
+1. $\operatorname{diag}(c) = \operatorname{diag}(d)$
+
+   <details>
+   <summary>❌ counterexample found</summary>
+
+   The negation of $\operatorname{diag}(c) = \operatorname{diag}(d)$ is satisfied by:
+
+   - $c_{1} = 2$
+   - $c_{2} = \square$
+   - $d_{1} = 3$
+   - $d_{2} = \square$
+   - $n = 2$
+   </details>
+2. $\operatorname{diag}(c_{1}, \ldots, d_{n}) = \operatorname{diag}(c)$
+
+   <details>
+   <summary>Unsupported step</summary>
+
+   no candidate range expression matched the visible sequence elements
+   </details>
+3. $\operatorname{diag}(c_{1}, \ldots, c_{n}) = \operatorname{diag}(c)$
+
+   <details>
+   <summary>✅ verified</summary>
+
+   No premises seemed necessary to show this.
+   </details>
+
+---
+layout: two-cols
+class: proof-example
+---
+
+# Example involving quantifiers/proof rules: Range is closed under linear combinations
+
+Given:
+
+- $A \in \mathbb{R}^{2 \times 2}$
+- $x \in \mathbb{R}^{2}$
+- $y \in \mathbb{R}^{2}$
+- $a \in \mathbb{R}$
+- $b \in \mathbb{R}$
+- $x \in \operatorname{Range}(A)$
+- $y \in \operatorname{Range}(A)$
+
+::right::
+
+WTS $a x + b y \in \operatorname{Range}(A)$
+
+<details>
+<summary>✅ witness found</summary>
+
+Witness:
+
+- $w_{preimage of A} = a u + b v$
+
+Matched facts:
+
+- $a x + b y = A \left(a u + b v\right)$
+</details>
+
+1. $x = A u$
+
+   <details>
+   <summary>✅ witness introduced</summary>
+
+   From $x \in \operatorname{Range}(A)$:
+
+   - $u$ as a witness for $w_{preimage of A}$
+   </details>
+2. $y = A v$
+
+   <details>
+   <summary>✅ witness introduced</summary>
+
+   From $y \in \operatorname{Range}(A)$:
+
+   - $v$ as a witness for $w_{preimage of A}$
+   </details>
+3. $a x + b y = A \left(a u + b v\right)$
+
+   <details>
+   <summary>✅ verified</summary>
+
+   This follows from the following facts:
+
+   - $x = A u$
+   - $y = A v$
+   </details>
+4. $a x + b y \in \operatorname{Range}(A)$
+
+   <details>
+   <summary>✅ witness found</summary>
+
+   Witness:
+
+   - $w_{preimage of A} = a u + b v$
+
+   Matched facts:
+
+   - $a x + b y = A \left(a u + b v\right)$
+   </details>
+
 <!-- todo: give the execution time on a 6-core laptop because this is the main difference wrt llm -->
+
+<style>
+.proof-example .slidev-layout {
+  font-size: 0.78em;
+}
+
+.proof-example h2 {
+  line-height: 1.05;
+  margin-bottom: 0.5rem;
+}
+
+.proof-example .col-left,
+.proof-example .col-right {
+  min-width: 0;
+}
+
+.proof-example ul,
+.proof-example ol {
+  margin-top: 0.35rem;
+}
+
+.proof-example li {
+  margin-bottom: 0.25rem;
+}
+
+.proof-example details {
+  margin: 0.35rem 0 0.55rem;
+  font-size: 0.9em;
+}
+
+.proof-example details p,
+.proof-example details ul {
+  margin-top: 0.25rem;
+  margin-bottom: 0.25rem;
+}
+
+</style>
 
 ---
 
 ## Architecture
 
-Core idea:
-
-```mermaid
-flowchart LR
-    DIMAGNOSTIC[dimension-agnostic rewrites]
-    DIMAGNOSTIC --> ENVIRONMENTENUM[dimension enumeration]
-    ENVIRONMENTENUM --> NONDIMAGNOSTIC[dimension-dependent rewrites]
-    NONDIMAGNOSTIC --> Z3[proof or cex]
-```
-
 ```mermaid
 flowchart LR
     MD[Markdown / TeX] --> AST["Expr&lt;()&gt;"]
     AST --> STE[SymbolicTypeEnvironment]
-    AST --> PREP[PreparedExpression]
+    AST --> PREP["<b>Dimension-free elaboration<b>"]
     STE --> PREP
     PREP --> DIM[Dimension constraints]
-    DIM --> ENV[Environment]
-    PREP --> ELAB[Concrete elaboration]
+    DIM --> ENV["<b>Environment enumeration<b>"]
+    PREP --> ELAB["<b>Concrete elaboration<b>"]
     ENV --> ELAB
     ELAB --> Z3[Scalar-cell Z3 lowering]
     Z3 --> SOLVE[Solver query]
     SOLVE --> RESULT[Model, counterexample, or proof result]
 ```
+
+<style>
+.slidev-layout {
+  display: flex;
+  flex-direction: column;
+}
+
+.mermaid {
+  margin-block: auto;
+}
+</style>
 
 ---
 
@@ -236,15 +421,19 @@ Solve the following problem:
 
 ---
 
-## Future work
+## Future work?
 
-- Generate Lean from linalg-checker IR
-  - Graceful handling of unsupported expressions (fall back to alternate path to Lean)
+- Generate Lean from linalg-checker IR?
+  - Can be seen as a competing approach to the existing scaffolder
+- Graceful handling of unsupported expressions
+  - Because each step "makes sense" on its own, it is OK if some steps aren't supported by the IR or by the validation procedure
 
 ---
 
 ## Future work?
 
+- **Target SMT theories other than QFRA** (e.g., EUF) that can apply algebraic identities
+  - This will tend to involve **underapproximating the semantics of input formulas** by omitting some function/relation semantics and omitting facts from the context
 - **Decide k-step provability** from finite collection of deduction rules + lemma library
   - BMC-like approach to provability -- not just "use `aesop`"
     - An excuse to work on theory of ADTs + theory combination?
@@ -265,3 +454,5 @@ Solve the following problem:
   - then the $d$-dimensional counterexample candidate space $U$ that the solver searches over
   - may satisfy that $p(U \cap W) \neq 0$
 - In other words: concolic testing for math
+
+<img src="/affine-space-cex-cropped.png" alt="Candidate and actual counterexamples intersecting a manifold" style="max-width: 60%; max-height: 32vh; height: auto; object-fit: contain; display: block; margin: 0 auto" />
