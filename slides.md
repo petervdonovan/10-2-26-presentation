@@ -21,8 +21,9 @@ Lightweight checking for undergraduate-level finite-dimensional linear algebra
   - Corollary: There is overlap and divergence from our existing implementation.
 - This is a prototype. Just because I worked on it doesn't mean I think we should use it.
   - Corollary: Divergence from our existing implementation should be fine. It is just experimentation.
+  - LLMs have created a reversal: ideas are costly and code is cheap. Green-field prototypes make more sense than ever.
 
-<!-- Disclaimer: I am not saying that we should use the code base that I have been working on. This is a prototype. The point is to share what I think I learned from tinkering with it. -->
+<!-- Happy to discuss copyright offline. -->
 
 ---
 
@@ -33,11 +34,9 @@ Lightweight checking for undergraduate-level finite-dimensional linear algebra
 - Proving student-written claims true is an unsatisfactory solution on its own
   - It costs latency/$$$ to try to **prove falsehoods**
 
-<img src="/cexes-points-cropped.png" alt="Candidate and actual counterexamples on a manifold" style="max-width: 70%; max-height: 40vh; height: auto; object-fit: contain; display: block; margin: 0 auto" />
-
 ---
 
-<!-- ## Original motivation (naive) -->
+## Original motivation (continued)
 
 - Problem 1: Witnesses involve real numbers?
   - Naive answer: Fuzz over $\mathbb Q$
@@ -46,18 +45,21 @@ Lightweight checking for undergraduate-level finite-dimensional linear algebra
   - Set of witnesses has measure 0?
   - Fuzzing only checks points
 
+<img src="/cexes-points-cropped.png" alt="Candidate and actual counterexamples on a manifold" style="max-width: 70%; max-height: 40vh; height: auto; object-fit: contain; display: block; margin: 0 auto" />
+
 <!-- todo: visualize points floating above/below lower-dimensional manifold -->
 
 ---
 
 ## Actual motivation
 
-- 100% correctness is usually not the most important goal in education
 <!-- - Disproving is naturally expressed as deciding an **existentially quantified formula** $\exists x_1, x_2, \dots \, \neg\phi(x_1, x_2, \dots)$ -->
 - **There will always be "easy" problems** for which symbolic/non-neural algorithms are already **much** cheaper/more responsive than LLMs will ever be
 - At the undergrad level, **we are interested in "easy" problems**
   - maybe even decidable!
   - Or translatable or "closely" under/over-approximable by decidable problems
+- 100% correctness is usually not the most important goal in education
+  - Partial support for inputs, ill-defined scope of support, under/overapproximation, etc. are all fair game.
 
 **What if our system based on SoTA tech is 10 years behind SoTA performance?**
 
@@ -134,6 +136,19 @@ Solve the following problem:
 - **Decide** linear algebra propositions with *bounded dimension* that can be expressed without quantifier alternation
   - i.e.: prove or disprove
 - **Disprove** linear algebra propositions that can be expressed without quantifier alternation
+
+---
+
+## Related work, and why this may not already exist
+
+- SMT-comp aggregates solvers that provide good support for many subsets of math
+  - Including real arithmetic
+  - Problem 1: "good support" implies limited scope
+  - Problem 2: the most practically applicable theories (bitvectors, arrays, etc.) are more relevant to software/hardware than mathematics
+  - Problem 3: these are infrastructure, not user interfaces, and hence lack high-level constructs
+- CASes (magma, sympy, sagemath, ...) are well-established and widely used
+  - APIs/syntax etc. designed before LLMs
+  - Similar "good support" limitations
 
 ---
 layout: two-cols
@@ -424,8 +439,14 @@ Related: "What has mathlib done for us?"
 
 - Generate Lean from linalg-checker IR?
   - Can be seen as a competing approach to the existing scaffolder
+- Lift from Lean to linalg-checker IR
+  - This could allow use of the checker in a tactic
 - Graceful handling of unsupported expressions
   - Because each step "makes sense" on its own, it is OK if some steps aren't supported by the IR or by the validation procedure
+- Refinement using formalization rollouts on realistic proofs
+  - Without CNL parsing: respond to parse failures by updating the **formalization prompt**
+  - With CNL parsing: can also respond to parse failures by updating the **parsing code**
+    - There is existing work on "code updates as a form of online learning". See Dreamcoder.
 
 ---
 
