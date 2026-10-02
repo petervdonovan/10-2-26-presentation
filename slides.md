@@ -54,12 +54,14 @@ Lightweight checking for undergraduate-level finite-dimensional linear algebra
 ## Actual motivation
 
 <!-- - Disproving is naturally expressed as deciding an **existentially quantified formula** $\exists x_1, x_2, \dots \, \neg\phi(x_1, x_2, \dots)$ -->
-- **There will always be "easy" problems** for which symbolic/non-neural algorithms are already **much** cheaper/more responsive than LLMs will ever be
-- At the undergrad level, **we are interested in "easy" problems**
-  - maybe even decidable!
-  - Or translatable or "closely" under/over-approximable by decidable problems
-- 100% correctness is usually not the most important goal in education
-  - Partial support for inputs, ill-defined scope of support, under/overapproximation, etc. are all fair game.
+- Cost: **There will always be "easy" problems** for which symbolic/non-neural algorithms are **much** cheaper/more responsive than LLMs will likely ever be
+  - At the undergrad level, **we are interested in "easy" problems**
+    - maybe even decidable!
+    - Or translatable or "closely" under/over-approximable by decidable problems
+- Other reasons:
+  - Feasibility: 100% correctness is usually not the most important goal in education
+    - Partial support for inputs, ill-defined scope of support, under/overapproximation, etc. are all fair game.
+  - Determinism: Tool use vs. prompt engineering can both increase determinism & alignment, and each has pros and cons
 
 **What if our system based on SoTA tech is 10 years behind SoTA performance?**
 
@@ -235,6 +237,8 @@ class: proof-example
 ---
 
 # Example: Formalizing input involving ellipsis
+
+Non-neural program synth is a practical and mature field (see Solar-Lezama's SKETCH & many subsequent works, and many papers by Gulwani et al.), but domain-specific work on math-specific PBE/sketching might not exist.
 
 Given:
 
