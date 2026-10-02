@@ -213,7 +213,28 @@ layout: two-cols
 class: proof-example
 ---
 
-# Example: Formalizing input involving ellipses
+# Example w/ cex synthesis: One-sided orthogonality
+
+Given:
+
+- $U^\top U = I$
+
+WTS $U U^\top = I$
+
+<details>
+<summary>❌ counterexample found</summary>
+
+The negation of $U U^\top = I$ is satisfied by:
+
+- $U = \begin{bmatrix}\left(\frac{15}{16}\right)^{\frac{1}{2}} \\ \frac{1}{4}\end{bmatrix}$
+</details>
+
+---
+layout: two-cols
+class: proof-example
+---
+
+# Example: Formalizing input involving ellipsis
 
 Given:
 
@@ -439,9 +460,9 @@ Related: "What has mathlib done for us?"
 
 - Generate Lean from linalg-checker IR?
   - Can be seen as a competing approach to the existing scaffolder
-- Lift from Lean to linalg-checker IR
+- Lift from Lean to linalg-checker IR?
   - This could allow use of the checker in a tactic
-- Graceful handling of unsupported expressions
+- Graceful handling of unsupported expressions ("graceful degradation" as an explicit "wide wall" compromise)
   - Because each step "makes sense" on its own, it is OK if some steps aren't supported by the IR or by the validation procedure
 - Refinement using formalization rollouts on realistic proofs
   - Without CNL parsing: respond to parse failures by updating the **formalization prompt**
