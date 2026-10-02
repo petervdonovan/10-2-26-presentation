@@ -70,7 +70,11 @@ layout: two-cols
 class: proof-example
 ---
 
-## QFRA example: Squaring nonnegative numbers is monotone
+## Example (QF_NRA): Squaring nonnegative numbers is monotone
+
+*Timing: 20.9 ms*
+
+<!-- Source: linalg-checker/examples/validate_argument/successes.output.md — Squaring nonnegative numbers is monotone -->
 
 Given:
 
@@ -86,7 +90,7 @@ WTS $x^{2} \le y^{2}$
 
 This follows from the following facts:
 
-- $0 \le \left(y - x\right) \left(x + y\right)$
+- $x^{2} \le y^{2}$
 </details>
 
 ::right::
@@ -129,6 +133,15 @@ This follows from the following facts:
 
    - $0 \le \left(y - x\right) \left(x + y\right)$
    </details>
+5. $x^{2} \le y^{2}$
+
+   <details>
+   <summary>✅ verified</summary>
+
+   This follows from the following facts:
+
+   - $0 \le \left(y - x\right) \left(x + y\right)$
+   </details>
 
 ---
 
@@ -158,6 +171,10 @@ class: proof-example
 ---
 
 ## Example w/ dimensions: Orthogonal matrices preserve squared length
+
+*Timing: 37.6 ms*
+
+<!-- Source: linalg-checker/examples/validate_argument/successes.output.md — Orthogonal matrices preserve squared length -->
 
 Given:
 
@@ -217,6 +234,10 @@ class: proof-example
 
 # Example w/ cex synthesis: One-sided orthogonality
 
+*Timing: 28.1 ms*
+
+<!-- Source: linalg-checker/tests/fixtures/validate_arguments_output.md — One-sided orthogonality -->
+
 Given:
 
 - $U^\top U = I$
@@ -228,7 +249,7 @@ WTS $U U^\top = I$
 
 The negation of $U U^\top = I$ is satisfied by:
 
-- $U = \begin{bmatrix}\left(\frac{15}{16}\right)^{\frac{1}{2}} \\ \frac{1}{4}\end{bmatrix}$
+- $U = \begin{bmatrix}0 \\ -1\end{bmatrix}$
 </details>
 
 ---
@@ -238,7 +259,11 @@ class: proof-example
 
 # Example: Formalizing input involving ellipsis
 
+*Timing: 90.3 ms*
+
 Non-neural program synth is a practical and mature field (see Solar-Lezama's SKETCH & many subsequent works, and many papers by Gulwani et al.), but domain-specific work on math-specific PBE/sketching might not exist.
+
+<!-- Source: linalg-checker/tests/fixtures/validate_arguments_output.md — Ellipsis error localization -->
 
 Given:
 
@@ -263,10 +288,10 @@ No premises seemed necessary to show this.
 
    The negation of $\operatorname{diag}(c) = \operatorname{diag}(d)$ is satisfied by:
 
-   - $c_{1} = 2$
-   - $c_{2} = \square$
-   - $d_{1} = 3$
-   - $d_{2} = \square$
+   - $c_{1} = \square$
+   - $c_{2} = 2$
+   - $d_{1} = \square$
+   - $d_{2} = 3$
    - $n = 2$
    </details>
 2. $\operatorname{diag}(c_{1}, \ldots, d_{n}) = \operatorname{diag}(c)$
@@ -290,6 +315,10 @@ class: proof-example
 ---
 
 # Example involving quantifiers/proof rules: Range is closed under linear combinations
+
+*Timing: 21.2 ms*
+
+<!-- Source: linalg-checker/tests/fixtures/validate_arguments_output.md — Range is closed under linear combinations -->
 
 Given:
 
@@ -342,6 +371,8 @@ Matched facts:
 
    This follows from the following facts:
 
+   - $x \in \operatorname{Range}(A)$
+   - $y \in \operatorname{Range}(A)$
    - $x = A u$
    - $y = A v$
    </details>
@@ -477,7 +508,7 @@ Related: "What has mathlib done for us?"
 
 ## Future work?
 
-- **Target SMT theories other than QFRA** (e.g., EUF) that can apply algebraic identities
+- **Target SMT theories other than QF_NRA** (e.g., EUF) that can apply algebraic identities
   - This will tend to involve **underapproximating the semantics of input formulas** by omitting some function/relation semantics and omitting facts from the context
 - **Decide k-step provability** from finite collection of deduction rules + lemma library
   - BMC-like approach to provability -- not just "use `aesop`"
@@ -492,7 +523,7 @@ Related: "What has mathlib done for us?"
 
 ## Future work: partial concretization?
 
-- Potential problem: QFRA could turn out to be slow, e.g. because counterexamples of small dimension may not exist
+- Potential problem: QF_NRA could turn out to be slow, e.g. because counterexamples of small dimension may not exist
 - idea:
   - if counterexamples of dimension $n$ are a manifold $W$ of dimension $k < n$,
   - and you leave $d$ values symbolic while randomly setting the remaining values randomly,
