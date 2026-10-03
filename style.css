@@ -1,7 +1,29 @@
-.slidev-layout strong,
-.slidev-layout b {
+.slidev-layout :not(.mermaid) {
+  font-weight: 100;
+}
+.slidev-layout :not(.mermaid) strong,
+.slidev-layout :not(.mermaid) b {
   font-weight: 800;
 }
-.slidev-layout  {
-  font-weight: 100;
+.proof-example {
+  font-size: 1em;
+  line-height: 1.05;
+}
+.proof-example p {
+  margin: 0.5em;
+}
+
+.proof-example h2 {
+  line-height: 1.05;
+}
+
+.proof-example .col-left,
+.proof-example .col-right {
+  min-width: 0;
+}
+
+.proof-example details p,
+.proof-example details ul {
+  margin-top: 0rem;
+  margin-bottom: 0rem;
 }

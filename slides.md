@@ -22,6 +22,7 @@ Lightweight checking for undergraduate-level finite-dimensional linear algebra
 - This is a prototype. Just because I worked on it doesn't mean I think we should use it.
   - Corollary: Divergence from our existing implementation should be fine. It is just experimentation.
   - LLMs have created a reversal: ideas are costly and code is cheap. Green-field prototypes make more sense than ever.
+- There is an interplay between HCI and algorithms aspects in terms of motivation and determination of what is possible, but potential HCI and algorithms contributions must be strong enough to separately stand on their own
 
 <!-- Happy to discuss copyright offline. -->
 
@@ -54,14 +55,14 @@ Lightweight checking for undergraduate-level finite-dimensional linear algebra
 ## Actual motivation
 
 <!-- - Disproving is naturally expressed as deciding an **existentially quantified formula** $\exists x_1, x_2, \dots \, \neg\phi(x_1, x_2, \dots)$ -->
-- Cost: **There will always be "easy" problems** for which symbolic/non-neural algorithms are **much** cheaper/more responsive than LLMs will likely ever be
+- *Cost:* **There will always be "easy" problems** for which symbolic/non-neural algorithms are **much** cheaper/more responsive than LLMs will likely ever be
   - At the undergrad level, **we are interested in "easy" problems**
     - maybe even decidable!
     - Or translatable or "closely" under/over-approximable by decidable problems
 - Other reasons:
-  - Feasibility: 100% correctness is usually not the most important goal in education
+  - *Feasibility:* 100% correctness is usually not the most important goal in education
     - Partial support for inputs, ill-defined scope of support, under/overapproximation, etc. are all fair game.
-  - Determinism: Tool use vs. prompt engineering can both increase determinism & alignment, and each has pros and cons
+  - *Determinism/alignment:* Tool use vs. prompt engineering can both increase determinism & alignment, and each has pros and cons
 
 **What if our system based on SoTA tech is 10 years behind SoTA performance?**
 
@@ -144,28 +145,6 @@ This follows from the following facts:
    </details>
 
 ---
-
-## Types of guarantees
-
-Solve the following problem:
-- **Decide** linear algebra propositions with *bounded dimension* that can be expressed without quantifier alternation
-  - i.e.: prove or disprove
-- **Disprove** linear algebra propositions that can be expressed without quantifier alternation
-
----
-
-## Related work, and why this may not already exist
-
-- SMT-comp aggregates solvers that provide good support for many subsets of math
-  - Including real arithmetic
-  - Problem 1: "good support" implies limited scope
-  - Problem 2: the most practically applicable theories (bitvectors, arrays, etc.) are more relevant to software/hardware than mathematics
-  - Problem 3: these are infrastructure, not user interfaces, and hence lack high-level constructs
-- CASes (magma, sympy, sagemath, ...) are well-established and widely used
-  - APIs/syntax etc. designed before LLMs
-  - Similar "good support" limitations
-
----
 layout: two-cols
 class: proof-example
 ---
@@ -228,6 +207,73 @@ This may follow from the following facts:
    </details>
 
 ---
+
+## Types of guarantees
+
+Solve the following problem:
+- **Decide** linear algebra propositions with *bounded dimension* that can be expressed without quantifier alternation
+  - i.e.: prove or disprove
+- **Disprove** linear algebra propositions that can be expressed without quantifier alternation
+  - requires an underapproximation that represents "a subset of the guarantee"
+  - [probably about the best you can do](https://mathoverflow.net/questions/33879/decidability-of-matrix-algebra), but I should verify the proof
+
+---
+
+## Related work
+
+- SMT-comp aggregates solvers that provide good support for many subsets of math (including QF_NRA). **However:**
+  1. these are infrastructure, not user interfaces, and hence lack high-level constructs (span, rank, orthogonality, etc.)
+      - both an HCI problem ("what high-level constructs?") and an algorithms problem ("how to lower them?")
+  <!-- 1. the best-supported theories (bitvectors, arrays, etc.) focus on software/hardware more than mathematics -->
+- CASes (Mathematica, Maple, Magma, Sympy, SageMath, ...) are well-established and widely used
+  1. Unclear support for underapproximation and solver-aware lowering for high-level constructs
+  1. Integration with CDCL solving, incremental solving, etc. may be incomplete?
+- Optimization languages (e.g. CVX/CVXPY, YALMIP) lower high-level constructs but do not incorporate general decision procedures
+- See [REDLOG](https://dl.acm.org/doi/pdf/10.1145/261320.261324), [SC<sup>2</sup>](https://arxiv.org/html/1607.06945v1)
+
+---
+
+## Potential algorithmic contributions
+
+- underapproximations used to produce efficiently decidable queries
+  - current approach is not very creative (see <Link to="architecture" title="Architecture"/>)
+- a family of standard tricks that combine to lower high-level linear algebra constructs to equisatisfiable QF queries
+  - skolemization, theorem-based simplifications/operator eliminations
+  - logical-polarity-dependent rewriting
+    - "$A$ is invertible" &rarr; "$\exists B.\, AB = I$"
+      - <sub>($\exists$ skolemizes away; truly QF determinant-based formulation lowers to a large, high-degree QF_NRA formula)</sub>
+    - "$A$ is not invertible" &rarr; "$\exists \vec{x} \neq \vec{0}.\, A\vec{x} = \vec{0}$"
+    - "$\vec{x} \in \operatorname{Range}(A)$" &rarr; "$\exists \vec{y}.\, A\vec{y} = x$"
+    - "$\vec{x} \notin \operatorname{Range}(A)$" &rarr; "$\exists \vec{y}.\, A^\top \vec{y} = \vec{0} \land \vec{y}^\top \vec{x} \neq 0$"
+  - optimization of # variables introduced, formula size, polynomial degree, etc.
+
+---
+
+# Related work summary
+
+<!-- | System | Underapproximation by decidable queries | Solver-aware lowering for high-level constructs | Arbitrary boolean structure | OSS |
+| --- | --- | --- | --- | --- |
+| Z3 | ❌ | ❌ | ✅ | ✅ MIT |
+| Mathematica | ❌ | ❌ | ✅ | ❌ |
+| CVX | ❌ | ✅ | ❌ | ✅ GPL (complicated) | -->
+
+| System family | Native matrix/vector syntax | General Boolean formulas | Quantifiers | Solver-aware matrix lowering | QF_NRA decision backend | General proposition checking |
+|---|---:|---:|---:|---:|---:|---:|
+| Z3/cvc5/SMT-RAT | low/no | yes | varies | no | yes | yes after manual encoding |
+| Mathematica/Maple/REDLOG | some/high | yes | yes | unclear/limited | yes | yes for supported scalar theories |
+| CVX/CVXPY/YALMIP | high | restricted | restricted | yes, for optimization | optimization backend | no |
+| this work | high | yes | partial | **yes** | yes | **yes** |
+
+<style>
+.slidev-layout th {
+  font-weight: 800;
+}
+.slidev-layout td {
+  padding: 0.35em;
+}
+</style>
+
+---
 layout: two-cols
 class: proof-example
 ---
@@ -261,7 +307,7 @@ class: proof-example
 
 *Timing: 90.3 ms*
 
-Non-neural program synth is a practical and mature field (see Solar-Lezama's SKETCH & many subsequent works, and many papers by Gulwani et al.), but domain-specific work on math-specific PBE/sketching might not exist.
+Non-neural program synth is a practical and mature field (related: Solar-Lezama's SKETCH & subsequent works, and papers by Gulwani et al.), but domain-specific work on math-specific PBE/sketching might not exist
 
 <!-- Source: linalg-checker/tests/fixtures/validate_arguments_output.md — Ellipsis error localization -->
 
@@ -390,45 +436,8 @@ Matched facts:
    - $a x + b y = A \left(a u + b v\right)$
    </details>
 
-<!-- todo: give the execution time on a 6-core laptop because this is the main difference wrt llm -->
-
-<style>
-.proof-example .slidev-layout {
-  font-size: 0.78em;
-}
-
-.proof-example h2 {
-  line-height: 1.05;
-  margin-bottom: 0.5rem;
-}
-
-.proof-example .col-left,
-.proof-example .col-right {
-  min-width: 0;
-}
-
-.proof-example ul,
-.proof-example ol {
-  margin-top: 0.35rem;
-}
-
-.proof-example li {
-  margin-bottom: 0.25rem;
-}
-
-.proof-example details {
-  margin: 0.35rem 0 0.55rem;
-  font-size: 0.9em;
-}
-
-.proof-example details p,
-.proof-example details ul {
-  margin-top: 0.25rem;
-  margin-bottom: 0.25rem;
-}
-
-</style>
-
+---
+routeAlias: architecture
 ---
 
 ## Architecture
@@ -437,11 +446,11 @@ Matched facts:
 flowchart LR
     MD[Markdown / TeX] --> AST["Expr&lt;()&gt;"]
     AST --> STE[SymbolicTypeEnvironment]
-    AST --> PREP["<b>Dimension-free elaboration<b>"]
+    AST --> PREP["<b>Dimension-free elaboration</b>"]
     STE --> PREP
     PREP --> DIM[Dimension constraints]
-    DIM --> ENV["<b>Environment enumeration<b>"]
-    PREP --> ELAB["<b>Concrete elaboration<b>"]
+    DIM --> ENV["<b>Environment enumeration</b>"]
+    PREP --> ELAB["<b>Concrete elaboration</b>"]
     ENV --> ELAB
     ELAB --> Z3[Scalar-cell Z3 lowering]
     Z3 --> SOLVE[Solver query]
@@ -476,48 +485,54 @@ flowchart LR
 
 ## What has "wide wall" done for us?
 
-Related: "What has mathlib done for us?"
+Related: "What has mathlib done for us?".
+<!-- This work can be seen as "first-class support" for a subset of math expressions, thus a departure from "wide wall." -->
 
 - The appeal is obvious
   - Without it, we are no better than unusable ITS of prior decades
 - The opportunity is obvious
   - LLMs can accept almost any textual input
   - Almost any proposition can be expressed using constructs from mathlib
+
+Why reign in "wide wall"?
 - **Feasibility**
-  - The implementation is here!
+  - The implementation is here! Right?
     - or at least, it is close? pending library learning?
-  - "wide wall" QA/alignment remains aspirational
+  - But "wide wall" QA/alignment remains aspirational
 - **Desirability**: "wide wall" (taken to the extreme) might actually be the **worst thing** about LLM tutors?
 
 ---
 
 ## Future work?
 
-- Generate Lean from linalg-checker IR?
+- Lower linalg-checker IR &rarr; Lean?
   - Can be seen as a competing approach to the existing scaffolder
-- Lift from Lean to linalg-checker IR?
-  - This could allow use of the checker in a tactic
+- Lift Lean &rarr; linalg-checker IR?
+  - Could allow use of the checker in a tactic
 - Graceful handling of unsupported expressions ("graceful degradation" as an explicit "wide wall" compromise)
   - Because each step "makes sense" on its own, it is OK if some steps aren't supported by the IR or by the validation procedure
-- Refinement using formalization rollouts on realistic proofs
-  - Without CNL parsing: respond to parse failures by updating the **formalization prompt**
-  - With CNL parsing: can also respond to parse failures by updating the **parsing code**
-    - There is existing work on "code updates as a form of online learning". See Dreamcoder.
+- Use lightweight checking to speed up lemma library learning?
 
 ---
 
 ## Future work?
 
 - **Target SMT theories other than QF_NRA** (e.g., EUF) that can apply algebraic identities
-  - This will tend to involve **underapproximating the semantics of input formulas** by omitting some function/relation semantics and omitting facts from the context
-- **Decide k-step provability** from finite collection of deduction rules + lemma library
+  - This will tend to involve **overapproximating the semantics of input formulas** by omitting some function/relation semantics and omitting facts from the context
+- **Provability with abstraction** for granularity checks
+- **Decide k-step provability** (also granularity-related) from finite collection of deduction rules + lemma library
   - BMC-like approach to provability -- not just "use `aesop`"
     - An excuse to work on theory of ADTs + theory combination?
 - **Generalize to a framework**
   - related to ongoing library learning work
   - Extension points:
     - syntax: operator library w/ parse rules etc.
-    - rewrite library
+    - rewrite libraries (both pre- and post- env enumeration)
+  - See DREAMCODER, "code updates as a form of online learning", code evolution vs. constitutional AI (HaLLMos)
+<!-- - Refinement using formalization rollouts on realistic proofs
+  - Without CNL parsing: respond to parse failures by updating the **formalization prompt**
+  - With CNL parsing: can also respond to parse failures by updating the **parsing code**
+    - There is existing work on "code updates as a form of online learning". See Dreamcoder. -->
 
 ---
 
@@ -528,7 +543,7 @@ Related: "What has mathlib done for us?"
   - if counterexamples of dimension $n$ are a manifold $W$ of dimension $k < n$,
   - and you leave $d$ values symbolic while randomly setting the remaining values randomly,
   - then the $d$-dimensional counterexample candidate space $U$ that the solver searches over
-  - may satisfy that $p(U \cap W) \neq 0$
-- In other words: concolic testing for math
+  - may satisfy that $p(U \cap W) \neq 0$ <sub>(here $U$ is the random variable)</sub>
+- In other words: **concolic testing for math**
 
 <img src="/affine-space-cex-cropped.png" alt="Candidate and actual counterexamples intersecting a manifold" style="max-width: 60%; max-height: 32vh; height: auto; object-fit: contain; display: block; margin: 0 auto" />
