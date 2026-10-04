@@ -567,13 +567,13 @@ Why reign in "wide wall"?
 
 ## Future work?
 
-- Lower linalg-checker IR &rarr; Lean?
-  - Can be seen as a competing approach to the existing scaffolder
-- Lift Lean &rarr; linalg-checker IR?
-  - Could allow use of the checker in a tactic
-- Graceful handling of unsupported expressions ("graceful degradation" as an explicit "wide wall" compromise)
+- Lower **linalg-checker IR &rarr; Lean**?
+  - A competing approach to the existing scaffolder?
+- Lift **Lean &rarr; linalg-checker IR**?
+  - Could allow use of linalg-checker tactics
+- Graceful handling of unsupported expressions (**graceful degradation** as an explicit "wide wall" compromise)
   - Because each step "makes sense" on its own, it is OK if some steps aren't supported by the IR or by the validation procedure
-- Use lightweight checking to speed up lemma library learning?
+- Use in lemma library learning to **filter candidate lemmas**?
 
 ---
 
@@ -600,10 +600,10 @@ Why reign in "wide wall"?
 
 ## Future work: partial concretization?
 
-- Potential problem: QF_NRA could turn out to be slow, e.g. because counterexamples of small dimension may not exist
-- idea:
+- Motivation: QF_NRA could be slow for some problems, e.g. because counterexamples of small dimension may not exist
+- Approach:
   - if counterexamples of dimension $n$ are a manifold $W$ of dimension $k < n$,
-  - and you leave $d$ values symbolic while randomly setting the remaining values randomly,
+  - and you leave $d$ values symbolic while setting the remaining values randomly,
   - then the $d$-dimensional counterexample candidate space $U$ that the solver searches over
   - may satisfy that $p(U \cap W) \neq 0$ <sub>(here $U$ is the random variable)</sub>
 - In other words: **concolic testing for math**
