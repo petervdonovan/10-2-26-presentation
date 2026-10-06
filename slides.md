@@ -210,12 +210,14 @@ This may follow from the following facts:
 
 ## Types of guarantees
 
-Solve the following problem:
+What we *really want* is to decide satisfiability/validity of queries involving matrix algebra, but this is [**impossible**](https://mathoverflow.net/questions/33879/decidability-of-matrix-algebra)
+- I should verify the proof
+
+So instead, **solve the following problem**:
 - **Decide** linear algebra propositions with *bounded dimension* that can be expressed without quantifier alternation
   - i.e.: prove or disprove
 - **Disprove** linear algebra propositions that can be expressed without quantifier alternation
   - requires an underapproximation that represents "a subset of the guarantee"
-  - [probably about the best you can do](https://mathoverflow.net/questions/33879/decidability-of-matrix-algebra), but I should verify the proof
 
 ---
 
@@ -251,72 +253,70 @@ Solve the following problem:
 
 # Related work summary
 
-| System family | Native matrix/vector syntax | NRA formulas with general boolean structure | Quantifiers | Solver-aware matrix lowering | QF_NRA / real-polynomial decision backend | General proposition checking |
-|---|---:|---:|---:|---:|---:|---:|
-| Z3 / cvc5 / SMT-RAT | no standard matrix theory; scalar/low-level theories <sup>[1](https://microsoft.github.io/z3guide/docs/theories/Arithmetic/) [2](https://cvc5.github.io/docs-ci/docs-main/theories/theories.html) [3](https://ths-rwth.github.io/smtrat/d0/da9/structsmtrat_1_1parser_1_1ArithmeticTheory.html)</sup> | yes <sup>[1](https://microsoft.github.io/z3guide/docs/theories/Arithmetic/) [2](https://cvc5.github.io/docs-ci/docs-main/theories/theories.html) [4](https://ths-rwth.github.io/smtrat/dc/dad/md__builds_ths_smt_smtrat_doc_markdown_07_using_smtrat.html)</sup> | completeness varies (CAD QE by SMT-RAT) <sup>[5](https://microsoft.github.io/z3guide/docs/logic/Quantifiers/) [6](https://cvc5.github.io/tutorials/beginners/theories.html) [4](https://ths-rwth.github.io/smtrat/dc/dad/md__builds_ths_smt_smtrat_doc_markdown_07_using_smtrat.html)</sup> | no general matrix → arithmetic lowering documented <sup>[1](https://microsoft.github.io/z3guide/docs/theories/Arithmetic/) [2](https://cvc5.github.io/docs-ci/docs-main/theories/theories.html) [3](https://ths-rwth.github.io/smtrat/d0/da9/structsmtrat_1_1parser_1_1ArithmeticTheory.html)</sup> | yes <sup>[7](https://microsoft.github.io/z3guide/docs/theories/Arithmetic/) [8](https://github.com/cvc5/cvc5/blob/main/NEWS.md) [4](https://ths-rwth.github.io/smtrat/dc/dad/md__builds_ths_smt_smtrat_doc_markdown_07_using_smtrat.html)</sup> | yes after low-level encoding, within supported fragments <sup>[1](https://microsoft.github.io/z3guide/docs/theories/Arithmetic/) [5](https://microsoft.github.io/z3guide/docs/logic/Quantifiers/) [4](https://ths-rwth.github.io/smtrat/dc/dad/md__builds_ths_smt_smtrat_doc_markdown_07_using_smtrat.html)</sup> |
-| Mathematica / Maple / REDLOG | mixed: high in Mathematica/Maple; REDLOG's logic layer is scalar <sup>[9](https://reference.wolfram.com/language/guide/MatrixOperations.html) [10](https://www.maplesoft.com/support/help/view.aspx?path=RegularChains%2FSemiAlgebraicSetTools) [11](https://www.redlog.eu/)</sup> | yes <sup>[12](https://reference.wolfram.com/language/ref/Resolve.html) [13](https://www.maplesoft.com/support/help/Maple/view.aspx?path=RegularChains%2FSemiAlgebraicSetTools%2FQuantifierElimination) [11](https://www.redlog.eu/)</sup> | yes <sup>[12](https://reference.wolfram.com/language/ref/Resolve.html) [13](https://www.maplesoft.com/support/help/Maple/view.aspx?path=RegularChains%2FSemiAlgebraicSetTools%2FQuantifierElimination) [14](https://www.redlog.eu/documentation/service.php?key=rlqe)</sup> | no general matrix → real-arithmetic lowering documented; matrix algebra and QE are documented largely separately <sup>[9](https://reference.wolfram.com/language/guide/MatrixOperations.html) [12](https://reference.wolfram.com/language/ref/Resolve.html) [10](https://www.maplesoft.com/support/help/view.aspx?path=RegularChains%2FSemiAlgebraicSetTools) [13](https://www.maplesoft.com/support/help/Maple/view.aspx?path=RegularChains%2FSemiAlgebraicSetTools%2FQuantifierElimination)</sup> | yes <sup>[12](https://reference.wolfram.com/language/ref/Resolve.html) [13](https://www.maplesoft.com/support/help/Maple/view.aspx?path=RegularChains%2FSemiAlgebraicSetTools%2FQuantifierElimination) [14](https://www.redlog.eu/documentation/service.php?key=rlqe)</sup> | yes for supported scalar theories <sup>[12](https://reference.wolfram.com/language/ref/Resolve.html) [13](https://www.maplesoft.com/support/help/Maple/view.aspx?path=RegularChains%2FSemiAlgebraicSetTools%2FQuantifierElimination) [11](https://www.redlog.eu/)</sup> |
-| CVX / CVXPY / YALMIP | high <sup>[15](https://cvxr.com/cvx/doc/intro.html) [16](https://cvxpy.readthedocs.io/en/latest/api_reference/cvxpy.expressions.html) [17](https://yalmip.github.io/tutorial/basics/)</sup> | restricted to modeling languages / special logical constructs <sup>[18](https://cvxr.com/cvx/doc/dcp.html) [19](https://www.cvxpy.org/version/1.4/api_reference/cvxpy.constraints.html) [20](https://yalmip.github.io/tutorial/logicprogramming)</sup> | not general first-order quantification <sup>[18](https://cvxr.com/cvx/doc/dcp.html) [19](https://www.cvxpy.org/version/1.4/api_reference/cvxpy.constraints.html) [20](https://yalmip.github.io/tutorial/logicprogramming)</sup> | yes, for optimization canonicalization/model construction <sup>[21](https://cvxr.com/cvx/doc/intro.html) [22](https://www.cvxpy.org/api_reference/cvxpy.reductions.html) [23](https://yalmip.github.io/tutorial/nonlinearoperators)</sup> | optimization backends, not a general NRA decision interface <sup>[15](https://cvxr.com/cvx/doc/intro.html) [24](https://yalmip.github.io/allsolvers/) [25](https://www.cvxpy.org/tutorial/constraints/index.html)</sup> | no general theorem/proposition-checking interface <sup>[15](https://cvxr.com/cvx/doc/intro.html) [18](https://cvxr.com/cvx/doc/dcp.html) [24](https://yalmip.github.io/allsolvers/)</sup> |
-| this work | high | yes | partial | **yes** | yes | **yes** |
+| System family | Native matrix/vector syntax | Real-polynomial logic / decision support | Quantifier support | Solver-aware matrix lowering |
+|---|---|---|---|---|
+| Z3 / cvc5 / SMT-RAT | No standard matrix theory; scalar/low-level encoding <sup>[1](https://microsoft.github.io/z3guide/docs/theories/Arithmetic/) [2](https://cvc5.github.io/docs-ci/docs-main/theories/theories.html) [3](https://ths-rwth.github.io/smtrat/d0/da9/structsmtrat_1_1parser_1_1ArithmeticTheory.html)</sup> | Arbitrary Boolean NRA formulas over scalars; QF_NRA solvers <sup>[1](https://microsoft.github.io/z3guide/docs/theories/Arithmetic/) [2](https://cvc5.github.io/docs-ci/docs-main/theories/theories.html) [7](https://github.com/cvc5/cvc5/blob/main/NEWS.md) [4](https://ths-rwth.github.io/smtrat/dc/dad/md__builds_ths_smt_smtrat_doc_markdown_07_using_smtrat.html)</sup> | Completeness varies; SMT-RAT offers QE (optional build feature) <sup>[5](https://microsoft.github.io/z3guide/docs/logic/Quantifiers/) [6](https://cvc5.github.io/tutorials/beginners/theories.html) [4](https://ths-rwth.github.io/smtrat/dc/dad/md__builds_ths_smt_smtrat_doc_markdown_07_using_smtrat.html)</sup> | General matrix → arithmetic lowering not documented in these sources <sup>[1](https://microsoft.github.io/z3guide/docs/theories/Arithmetic/) [2](https://cvc5.github.io/docs-ci/docs-main/theories/theories.html) [3](https://ths-rwth.github.io/smtrat/d0/da9/structsmtrat_1_1parser_1_1ArithmeticTheory.html)</sup> |
+| Mathematica / Maple / REDLOG | Mathematica/Maple: yes; REDLOG logic input: scalar <sup>[8](https://reference.wolfram.com/language/guide/MatrixOperations.html) [9](https://www.maplesoft.com/support/help/view.aspx?path=RegularChains%2FSemiAlgebraicSetTools) [10](https://www.redlog.eu/)</sup> | Arbitrary Boolean real-polynomial formulas; scalar checking/QE <sup>[11](https://reference.wolfram.com/language/ref/Resolve.html) [12](https://www.maplesoft.com/support/help/Maple/view.aspx?path=RegularChains%2FSemiAlgebraicSetTools%2FQuantifierElimination) [10](https://www.redlog.eu/)</sup> | Real-polynomial QE <sup>[11](https://reference.wolfram.com/language/ref/Resolve.html) [12](https://www.maplesoft.com/support/help/Maple/view.aspx?path=RegularChains%2FSemiAlgebraicSetTools%2FQuantifierElimination) [13](https://www.redlog.eu/documentation/service.php?key=rlqe)</sup> | Matrix algebra and scalar QE documented separately; general lowering unclear <sup>[8](https://reference.wolfram.com/language/guide/MatrixOperations.html) [11](https://reference.wolfram.com/language/ref/Resolve.html) [9](https://www.maplesoft.com/support/help/view.aspx?path=RegularChains%2FSemiAlgebraicSetTools) [12](https://www.maplesoft.com/support/help/Maple/view.aspx?path=RegularChains%2FSemiAlgebraicSetTools%2FQuantifierElimination)</sup> |
+| CVX / CVXPY / YALMIP | Yes <sup>[14](https://cvxr.com/cvx/doc/intro.html) [15](https://cvxpy.readthedocs.io/en/latest/api_reference/cvxpy.expressions.html) [16](https://yalmip.github.io/tutorial/basics/)</sup> | Optimization constraints / selected logical constructs; no general NRA checking interface <sup>[17](https://cvxr.com/cvx/doc/dcp.html) [18](https://www.cvxpy.org/version/1.4/api_reference/cvxpy.constraints.html) [19](https://yalmip.github.io/tutorial/logicprogramming) [22](https://yalmip.github.io/allsolvers/) [23](https://www.cvxpy.org/tutorial/constraints/index.html)</sup> | No general first-order interface <sup>[17](https://cvxr.com/cvx/doc/dcp.html) [18](https://www.cvxpy.org/version/1.4/api_reference/cvxpy.constraints.html) [19](https://yalmip.github.io/tutorial/logicprogramming)</sup> | Yes, for optimization canonicalization/model construction <sup>[14](https://cvxr.com/cvx/doc/intro.html) [20](https://www.cvxpy.org/api_reference/cvxpy.reductions.html) [21](https://yalmip.github.io/tutorial/nonlinearoperators)</sup> |
+| This work | Yes, supported constructs | Boolean formulas lowered to QF_NRA | Partial | **Yes, for supported constructs at concrete dimensions** |
 
-<br/>
+**Proposed contribution:** solver-aware lowering of high-level linear algebra constructs to real-polynomial queries, including choices that control variable count, formula size, and polynomial degree.
+
+*Scope: a dimension bound does not establish validity in every dimension. “Unclear” / “not documented” describe gaps in the cited documentation, not proofs of absence.*
 
 *LLM assistance was used to create this table.*
 
 ##### Sources
 
-<a id="rw1"></a>**[1] Z3 arithmetic.** Z3's documented arithmetic interface consists of integer/real scalar arithmetic and arithmetic fragments, including nonlinear real arithmetic: https://microsoft.github.io/z3guide/docs/theories/Arithmetic/
+<a id="rw1"></a>**[1](https://microsoft.github.io/z3guide/docs/theories/Arithmetic/) Z3 arithmetic.** Z3's documented arithmetic interface consists of integer/real scalar arithmetic and arithmetic fragments, including nonlinear real arithmetic, with model-based CAD, incremental linearization, and Gröbner-basis simplification.
 
-<a id="rw2"></a>**[2] cvc5 theory reference.** Lists cvc5's standardized and extended theories (arrays, bit-vectors, arithmetic, strings, etc.); there is no matrix/vector theory: https://cvc5.github.io/docs-ci/docs-main/theories/theories.html
+<a id="rw2"></a>**[2](https://cvc5.github.io/docs-ci/docs-main/theories/theories.html) cvc5 theory reference.** Lists cvc5's standardized and extended theories (arrays, bit-vectors, arithmetic, strings, etc.); there is no matrix/vector theory.
 
-<a id="rw3"></a>**[3] SMT-RAT arithmetic theory.** Its SMT-LIB arithmetic parser implements LRA, LIA, NRA, and NIA as scalar arithmetic theories: https://ths-rwth.github.io/smtrat/d0/da9/structsmtrat_1_1parser_1_1ArithmeticTheory.html
+<a id="rw3"></a>**[3](https://ths-rwth.github.io/smtrat/d0/da9/structsmtrat_1_1parser_1_1ArithmeticTheory.html) SMT-RAT arithmetic theory.** Its SMT-LIB arithmetic parser implements LRA, LIA, NRA, and NIA as scalar arithmetic theories.
 
-<a id="rw4"></a>**[4] SMT-RAT usage / QE.** Documents SMT-LIB input, SMT solving, quantifier elimination, arbitrary Boolean structure for NRA, and complete QF_NRA strategies: https://ths-rwth.github.io/smtrat/dc/dad/md__builds_ths_smt_smtrat_doc_markdown_07_using_smtrat.html
+<a id="rw4"></a>**[4](https://ths-rwth.github.io/smtrat/dc/dad/md__builds_ths_smt_smtrat_doc_markdown_07_using_smtrat.html) SMT-RAT usage / QE.** Documents SMT-LIB input, SMT solving, quantifier elimination, arbitrary Boolean structure for NRA, and complete QF_NRA strategies.
 
-<a id="rw5"></a>**[5] Z3 quantifiers.** Z3 is a decision procedure for supported quantifier-free theories and also accepts quantified formulas, with generally incomplete quantifier handling: https://microsoft.github.io/z3guide/docs/logic/Quantifiers/
+<a id="rw5"></a>**[5](https://microsoft.github.io/z3guide/docs/logic/Quantifiers/) Z3 quantifiers.** Z3 is a decision procedure for supported quantifier-free theories and also accepts quantified formulas, with generally incomplete quantifier handling.
 
-<a id="rw6"></a>**[6] cvc5 quantifiers.** cvc5 documents quantified versions of its SMT theories and discusses instantiation-based quantified reasoning and decidable arithmetic fragments: https://cvc5.github.io/tutorials/beginners/theories.html
+<a id="rw6"></a>**[6](https://cvc5.github.io/tutorials/beginners/theories.html) cvc5 quantifiers.** cvc5 documents quantified versions of its SMT theories and discusses instantiation-based quantified reasoning and decidable arithmetic fragments.
 
-<a id="rw7"></a>**[7] Z3 nonlinear real arithmetic.** Documents model-based CAD, incremental linearization, Gröbner-basis simplification, etc., for NRA: https://microsoft.github.io/z3guide/docs/theories/Arithmetic/
+<a id="rw7"></a>**[7](https://github.com/cvc5/cvc5/blob/main/NEWS.md) cvc5 NRA.** cvc5 documents its cylindrical-algebraic-coverings-based nonlinear real arithmetic solver.
 
-<a id="rw8"></a>**[8] cvc5 NRA.** cvc5 documents its cylindrical-algebraic-coverings-based nonlinear real arithmetic solver: https://github.com/cvc5/cvc5/blob/main/NEWS.md
+<a id="rw8"></a>**[8](https://reference.wolfram.com/language/guide/MatrixOperations.html) Wolfram matrix operations.** Symbolic and numeric matrix operations include inverse, rank, null space, range space, and transpose.
 
-<a id="rw9"></a>**[9] Wolfram matrix operations.** Symbolic and numeric matrix operations include inverse, rank, null space, range space, transpose, etc.: https://reference.wolfram.com/language/guide/MatrixOperations.html
+<a id="rw9"></a>**[9](https://www.maplesoft.com/support/help/view.aspx?path=RegularChains%2FSemiAlgebraicSetTools) Maple semialgebraic / matrix infrastructure.** Maple's `SemiAlgebraicSetTools` facilities operate on scalar polynomial systems; matrix operations are documented in its linear algebra facilities. See also [Maple linear algebra](https://www.maplesoft.com/support/help/Maple/view.aspx?path=examples/LA_options&cid=276).
 
-<a id="rw10"></a>**[10] Maple semialgebraic / matrix infrastructure.** Maple's `RegularChains` package includes separate `MatrixTools` and `SemiAlgebraicSetTools` facilities, the latter operating on scalar polynomial systems: https://www.maplesoft.com/support/help/view.aspx?path=RegularChains%2FSemiAlgebraicSetTools. See also https://www.maplesoft.com/support/help/Maple/view.aspx?path=examples/LA_options&cid=276
+<a id="rw10"></a>**[10](https://www.redlog.eu/) REDLOG.** REDLOG operates on interpreted first-order formulas over domains including nonlinear real arithmetic and provides logical simplification, QE, and decision procedures.
 
-<a id="rw11"></a>**[11] REDLOG.** REDLOG operates on interpreted first-order formulas over domains including nonlinear real arithmetic and provides logical simplification, QE, and decision procedures: https://www.redlog.eu/
+<a id="rw11"></a>**[11](https://reference.wolfram.com/language/ref/Resolve.html) Mathematica `Resolve`.** Accepts arbitrary logical combinations, `ForAll`/`Exists`, equations and inequalities, and can in principle eliminate quantifiers from real polynomial formulas.
 
-<a id="rw12"></a>**[12] Mathematica `Resolve`.** Accepts arbitrary logical combinations, `ForAll`/`Exists`, equations and inequalities, and can in principle eliminate quantifiers from real polynomial formulas: https://reference.wolfram.com/language/ref/Resolve.html
+<a id="rw12"></a>**[12](https://www.maplesoft.com/support/help/Maple/view.aspx?path=RegularChains%2FSemiAlgebraicSetTools%2FQuantifierElimination) Maple quantifier elimination.** `QuantifierElimination` accepts quantified logical formulas over polynomial real arithmetic and returns an equivalent quantifier-free formula.
 
-<a id="rw13"></a>**[13] Maple quantifier elimination.** `QuantifierElimination` accepts quantified logical formulas over polynomial real arithmetic and returns an equivalent quantifier-free formula: https://www.maplesoft.com/support/help/Maple/view.aspx?path=RegularChains%2FSemiAlgebraicSetTools%2FQuantifierElimination
+<a id="rw13"></a>**[13](https://www.redlog.eu/documentation/service.php?key=rlqe) REDLOG QE.** `rlqe` eliminates quantifiers over the reals using virtual substitution and partial CAD.
 
-<a id="rw14"></a>**[14] REDLOG QE.** `rlqe` eliminates quantifiers over the reals using virtual substitution and partial CAD: https://www.redlog.eu/documentation/service.php?key=rlqe
+<a id="rw14"></a>**[14](https://cvxr.com/cvx/doc/intro.html) CVX.** CVX is explicitly a modeling system for disciplined convex programs, including LP/QP/SOCP/SDP and matrix-valued optimization models; DCP-compliant problems are automatically verified and converted to solvable form.
 
-<a id="rw15"></a>**[15] CVX.** CVX is explicitly a modeling system for disciplined convex programs, including LP/QP/SOCP/SDP and matrix-valued optimization models: https://cvxr.com/cvx/doc/intro.html
+<a id="rw15"></a>**[15](https://cvxpy.readthedocs.io/en/latest/api_reference/cvxpy.expressions.html) CVXPY expressions.** CVXPY expressions have arbitrary shapes and matrix operations such as transpose, with vector/matrix decision variables.
 
-<a id="rw16"></a>**[16] CVXPY expressions.** CVXPY expressions have arbitrary shapes and matrix operations such as transpose, with vector/matrix decision variables: https://cvxpy.readthedocs.io/en/latest/api_reference/cvxpy.expressions.html
+<a id="rw16"></a>**[16](https://yalmip.github.io/tutorial/basics/) YALMIP symbolic matrices.** `sdpvar(n,m)` directly creates matrix-valued symbolic decision variables.
 
-<a id="rw17"></a>**[17] YALMIP symbolic matrices.** `sdpvar(n,m)` directly creates matrix-valued symbolic decision variables: https://yalmip.github.io/tutorial/basics/
+<a id="rw17"></a>**[17](https://cvxr.com/cvx/doc/dcp.html) CVX DCP grammar.** CVX restricts admissible objectives, constraints, and expression compositions according to the DCP ruleset rather than providing arbitrary first-order formulas.
 
-<a id="rw18"></a>**[18] CVX DCP grammar.** CVX restricts admissible objectives, constraints, and expression compositions according to the DCP ruleset rather than providing arbitrary first-order formulas: https://cvxr.com/cvx/doc/dcp.html
+<a id="rw18"></a>**[18](https://www.cvxpy.org/version/1.4/api_reference/cvxpy.constraints.html) CVXPY constraints.** CVXPY supports structured optimization constraints such as PSD and second-order-cone constraints; its language is an optimization modeling language rather than general FOL.
 
-<a id="rw19"></a>**[19] CVXPY constraints.** CVXPY supports structured optimization constraints such as PSD and second-order-cone constraints; its language is an optimization modeling language rather than general FOL: https://www.cvxpy.org/version/1.4/api_reference/cvxpy.constraints.html
+<a id="rw19"></a>**[19](https://yalmip.github.io/tutorial/logicprogramming) YALMIP logic modeling.** YALMIP supports selected logical constructs by translating them into integer-programming representations.
 
-<a id="rw20"></a>**[20] YALMIP logic modeling.** YALMIP supports selected logical constructs by translating them into integer-programming representations: https://yalmip.github.io/tutorial/logicprogramming
+<a id="rw20"></a>**[20](https://www.cvxpy.org/api_reference/cvxpy.reductions.html) CVXPY canonicalization / solver reductions.** CVXPY's solving chain applies reductions that transform high-level DCP/DGP problems before dispatch to low-level solvers.
 
-<a id="rw21"></a>**[21] CVX automatic conversion.** CVX describes DCP-compliant problems as being automatically verified and converted to solvable form: https://cvxr.com/cvx/doc/intro.html
+<a id="rw21"></a>**[21](https://yalmip.github.io/tutorial/nonlinearoperators) YALMIP operator lowering.** YALMIP explicitly describes graph-based representations that introduce auxiliary variables and constraints and alternative mixed-integer representations for nonlinear operators.
 
-<a id="rw22"></a>**[22] CVXPY canonicalization / solver reductions.** CVXPY's solving chain applies reductions that transform high-level DCP/DGP problems before dispatch to low-level solvers: https://www.cvxpy.org/api_reference/cvxpy.reductions.html
+<a id="rw22"></a>**[22](https://yalmip.github.io/allsolvers/) YALMIP solvers.** YALMIP describes itself as concentrating on modeling/high-level algorithms while relying on external numerical optimization solvers.
 
-<a id="rw23"></a>**[23] YALMIP operator lowering.** YALMIP explicitly describes graph-based representations that introduce auxiliary variables and constraints and alternative mixed-integer representations for nonlinear operators: https://yalmip.github.io/tutorial/nonlinearoperators
-
-<a id="rw24"></a>**[24] YALMIP solvers.** YALMIP describes itself as concentrating on modeling/high-level algorithms while relying on external numerical optimization solvers: https://yalmip.github.io/allsolvers/
-
-<a id="rw25"></a>**[25] CVXPY optimization constraints / solver interfaces.** CVXPY's supported constraints are formulated for numerical optimization and dispatched to optimization solvers: https://www.cvxpy.org/tutorial/constraints/index.html
+<a id="rw23"></a>**[23](https://www.cvxpy.org/tutorial/constraints/index.html) CVXPY optimization constraints / solver interfaces.** CVXPY's supported constraints are formulated for numerical optimization and dispatched to optimization solvers.
 
 <style>
 .slidev-layout {
-  font-size: 0.5em;
+  font-size: 0.55em;
 }
 .slidev-layout p {
   font-size: 0.7em;
@@ -565,32 +565,50 @@ Why reign in "wide wall"?
 
 ---
 
-## Future work?
+## Future work: applications, evaluations?
 
 - Lower **linalg-checker IR &rarr; Lean**?
   - A competing approach to the existing scaffolder?
 - Lift **Lean &rarr; linalg-checker IR**?
-  - Could allow use of linalg-checker tactics
+  - Could allow use of linalg-checker in tactics
 - Graceful handling of unsupported expressions (**graceful degradation** as an explicit "wide wall" compromise)
   - Because each step "makes sense" on its own, it is OK if some steps aren't supported by the IR or by the validation procedure
 - Use in lemma library learning to **filter candidate lemmas**?
+- **Syntax/cultural-alignment/generality evaluation**?
+  - can a language model + cultural context model without special knowledge of the system emit inputs that are accepted by the system?
 
 ---
 
-## Future work?
+## Future work: very standard/non-innovative algorithms?
 
 - **Target SMT theories other than QF_NRA** (e.g., EUF) that can apply algebraic identities
   - This will tend to involve **overapproximating the semantics of input formulas** by omitting some function/relation semantics and omitting facts from the context
 - **Provability with abstraction** for granularity checks
-- **Decide k-step provability** (also granularity-related) from finite collection of deduction rules + lemma library
-  - BMC-like approach to provability -- not just "use `aesop`"
-    - An excuse to work on theory of ADTs + theory combination?
-- **Generalize to a framework**
-  - related to ongoing library learning work
-  - Extension points:
+- **Optimization** of solve times, by improved rewriting passes
+  - Related: optimizing compilers, "phase ordering problem"
+
+---
+
+## Future work: k-step provability?
+- *Objective:* **Decide k-step provability** (also granularity-related) from finite collection of deduction rules + lemma library
+  - and, **extract the model that defines the proof**
+- *Approach:* **BMC-like approach** to provability -- not just `aesop`, `maude`, e-graphs, or knuth-bendix
+  - An excuse to work on theory of ADTs + theory combination?
+  - Related work:
+    - [well-developed work](https://arxiv.org/abs/2411.07955) on BMC-style bit-blasting (reduction to SAT) of resolution proofs of UNSAT
+    - hard to find work on bounded solutions to word problem instances using the BMC approach
+    - hard to find work that uses a QF_ADT solver
+    - hard to find work that applies to more general (non-propositional) logics
+
+---
+
+## Future work: Generalize to a framework?
+- related to ongoing library learning work
+- Extension points:
     - syntax: operator library w/ parse rules etc.
     - rewrite libraries (both pre- and post- env enumeration)
-  - See DREAMCODER, "code updates as a form of online learning", code evolution vs. constitutional AI (HaLLMos)
+- See DREAMCODER, "code updates as a form of online learning", code evolution vs. constitutional AI (HaLLMos)
+
 <!-- - Refinement using formalization rollouts on realistic proofs
   - Without CNL parsing: respond to parse failures by updating the **formalization prompt**
   - With CNL parsing: can also respond to parse failures by updating the **parsing code**
