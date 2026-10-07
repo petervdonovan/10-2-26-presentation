@@ -542,6 +542,8 @@ flowchart LR
       - option 1: don't use the embeddings
       - option 2: learn a regression model that predicts faithfulness from embeddings
       - option 3: **eliminate/discourage differences along the irrelevant directions**
+- Newly feasible because with LLMs, users don't need to write a CNL -- they just have to read it
+- Related: Bool, Prameya (see Arnav's post)
 
 ---
 
@@ -579,7 +581,7 @@ Why reign in "wide wall"?
 
 ---
 
-## Future work: very standard/non-innovative algorithms?
+## Future work: standard/non-innovative algorithms?
 
 - **Target SMT theories other than QF_NRA** (e.g., EUF) that can apply algebraic identities
   - This will tend to involve **overapproximating the semantics of input formulas** by omitting some function/relation semantics and omitting facts from the context
