@@ -7,7 +7,8 @@
     "build": "node scripts/build-site.mjs",
     "dev": "node scripts/prepare-docs.mjs && slidev --open",
     "export": "node scripts/prepare-docs.mjs && slidev export",
-    "test:docs": "node --test scripts/docs.test.mjs"
+    "test:docs": "node --test scripts/docs.test.mjs",
+    "test:reader": "node scripts/check-reader.mjs"
   },
   "dependencies": {
     "@slidev/cli": "^53.0.0",

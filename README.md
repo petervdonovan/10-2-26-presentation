@@ -33,3 +33,9 @@ reading pages. It creates real HTML entrypoints for all docs routes, so direct
 links and refreshes work on GitHub Pages. `--out` selects another output directory.
 The generated source staging directory is ignored by Git. `npm run test:docs`
 checks document selection and link rewriting.
+
+After a production build, `npm run test:reader` checks all output pages in
+headless Chrome, including math, scrolling, direct URLs, and navigation back
+to the presentation. It expects a build with base `/10-2-26-presentation/`;
+pass another build directory after `--`, or set `READER_TEST_URL` to test a dev
+server instead. Chrome must be installed; `CHROME_BIN` overrides its executable.

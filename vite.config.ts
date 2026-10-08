@@ -5,6 +5,11 @@ import { generatedDirectory } from './scripts/prepare-docs.mjs'
 import { rewriteDocumentLink } from './scripts/docs-lib.mjs'
 
 export default defineConfig({
+  resolve: {
+    // Slidev imports from pnpm's package tree while project components import
+    // from the hoisted root. Router injection keys must come from one instance.
+    dedupe: ['vue-router'],
+  },
   slidev: {
     markdown: {
       markdownSetup(md) {

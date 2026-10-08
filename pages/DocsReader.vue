@@ -66,7 +66,9 @@ watch(() => route.hash, scrollToLocation)
         </p>
       </header>
       <template v-if="!sourcePath">
-        <p>Read the complete diagnostic outputs. These examples show both the system’s capabilities and its current limitations.</p>
+        <p>These examples show the system’s capabilities and limitations.</p>
+        
+        <p><strong><code>validate_arguments_output.md</code> is the top-level integration test that provides the most information about the behavior of the complete system.</strong> <code>failures.output.md</code> exhibits current bugs or limitations of the system.</p>
         <section>
           <h2>Output examples</h2>
           <ul class="docs-index">
