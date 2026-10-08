@@ -2,8 +2,9 @@ import { posix } from 'node:path'
 
 export const sourceRepository = 'https://github.com/petervdonovan/linalg-checker'
 
-export function selectOutputFiles(files) {
-  return files.filter(path => /(?:^|[/._])output\.md$/.test(path)).sort()
+export function selectPublishedFiles(files) {
+  return files.filter(path => /(?:^|[/._])output\.md$/.test(path)
+    || /^docs\/pipeline[-_]overview\.md$/.test(path)).sort()
 }
 
 export function documentRoute(path) {

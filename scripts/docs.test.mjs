@@ -1,15 +1,17 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
-import { documentRoute, rewriteDocumentLink, selectOutputFiles, sourceUrl } from './docs-lib.mjs'
+import { documentRoute, rewriteDocumentLink, selectPublishedFiles, sourceUrl } from './docs-lib.mjs'
 
-test('publishes only output Markdown across filename conventions', () => {
+test('publishes outputs and the pipeline overview, excluding other Markdown', () => {
   const files = [
     'README.md', 'docs/overview.md', 'tests/a_input.md', 'tests/a_output.md',
     'tests/b.input.md', 'tests/b.output.md', 'examples/successes.md',
     'examples/successes.output.md', 'tests/unpaired_input.md', 'docs/image.png',
     'output.md', 'tests/output.md', 'docs/notoutput.md', 'tests/output.txt',
+    'docs/pipeline-overview.md', 'docs/pipeline_overview.md', 'docs/design-guidelines.md',
   ]
-  assert.deepEqual(selectOutputFiles(files), [
+  assert.deepEqual(selectPublishedFiles(files), [
+    'docs/pipeline-overview.md', 'docs/pipeline_overview.md',
     'examples/successes.output.md', 'output.md',
     'tests/a_output.md', 'tests/b.output.md', 'tests/output.md',
   ])

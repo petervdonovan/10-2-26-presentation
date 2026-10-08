@@ -1,8 +1,8 @@
 import { execFileSync } from 'node:child_process'
-import { copyFile, mkdir, rm, writeFile } from 'node:fs/promises'
+import { copyFile, mkdir, readFile, rm, writeFile } from 'node:fs/promises'
 import { resolve, dirname } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
-import { documentRoute, selectOutputFiles, sourceUrl } from './docs-lib.mjs'
+import { documentRoute, selectPublishedFiles, sourceUrl } from './docs-lib.mjs'
 
 export const projectRoot = fileURLToPath(new URL('../', import.meta.url))
 export const generatedDirectory = resolve(projectRoot, '.generated/linalg-docs')
@@ -12,8 +12,8 @@ export async function prepareDocs() {
   const git = (...args) => execFileSync('git', ['-C', sourceDirectory, ...args], { encoding: 'utf8' })
   const revision = git('rev-parse', 'HEAD').trim()
   const files = git('ls-files', '-z').split('\0').filter(Boolean)
-  const selected = selectOutputFiles(files)
-  if (!selected.length) throw new Error(`No tracked output Markdown files found in ${sourceDirectory}`)
+  const selected = selectPublishedFiles(files)
+  if (!selected.length) throw new Error(`No publishable Markdown files found in ${sourceDirectory}`)
   await rm(generatedDirectory, { recursive: true, force: true })
   const documents = []
   // Non-Markdown files are staged for relative image imports; only referenced
@@ -23,8 +23,11 @@ export async function prepareDocs() {
     await mkdir(dirname(destination), { recursive: true })
     await copyFile(resolve(sourceDirectory, path), destination)
     if (!selected.includes(path)) continue
-    const title = `${path.split('/').at(-1).replace(/(?:[._])?output\.md$/, '').replace(/[._-]+/g, ' ').trim() || 'System'} — output examples`
-    documents.push({ path, route: documentRoute(path), title, sourceUrl: sourceUrl(path, revision) })
+    const output = /(?:^|[/._])output\.md$/.test(path)
+    const title = output
+      ? `${path.split('/').at(-1).replace(/(?:[._])?output\.md$/, '').replace(/[._-]+/g, ' ').trim() || 'System'} — output examples`
+      : (await readFile(destination, 'utf8')).match(/^#\s+(.+)$/m)?.[1] || 'Pipeline overview'
+    documents.push({ path, route: documentRoute(path), title, kind: output ? 'output' : 'documentation', sourceUrl: sourceUrl(path, revision) })
   }
   documents.sort((a, b) => a.path.localeCompare(b.path))
   const manifest = { revision, files, documents }

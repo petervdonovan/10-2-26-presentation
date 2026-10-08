@@ -10,12 +10,13 @@ Edit the [slides.md](./slides.md) to see the changes.
 
 Learn more about Slidev at the [documentation](https://sli.dev/).
 
-## Output examples
+## Output examples and pipeline overview
 
 Visit `/docs/` on the same site for the document index and complete scrollable
-output snapshots from `linalg-checker`. Only files named `output.md`,
-`*.output.md`, or `*_output.md` are published. Inputs, READMEs, and design docs
-are omitted; links to them open their original GitHub source files.
+output snapshots from `linalg-checker`, plus `docs/pipeline-overview.md`.
+Files named `output.md`, `*.output.md`, or `*_output.md` are published along
+with this pipeline overview. Inputs, READMEs, and other design docs are omitted;
+links to them open their original GitHub source files.
 The reading pages use Slidev's Markdown, KaTeX, Mermaid, and code highlighting.
 
 Development, build, and export commands generate the pages from the adjacent
@@ -34,8 +35,8 @@ links and refreshes work on GitHub Pages. `--out` selects another output directo
 The generated source staging directory is ignored by Git. `npm run test:docs`
 checks document selection and link rewriting.
 
-After a production build, `npm run test:reader` checks all output pages in
-headless Chrome, including math, scrolling, direct URLs, and navigation back
+After a production build, `npm run test:reader` checks all published pages in
+headless Chrome, including math, diagrams, scrolling, direct URLs, and navigation back
 to the presentation. It expects a build with base `/10-2-26-presentation/`;
 pass another build directory after `--`, or set `READER_TEST_URL` to test a dev
 server instead. Chrome must be installed; `CHROME_BIN` overrides its executable.

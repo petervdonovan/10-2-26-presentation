@@ -59,7 +59,7 @@ watch(() => route.hash, scrollToLocation)
         <a :href="`https://github.com/petervdonovan/linalg-checker/tree/${manifest.revision}`">linalg-checker source</a>
       </nav>
       <header>
-        <h1>{{ sourcePath ? (document?.title || 'Document not found') : 'linalg-checker output examples' }}</h1>
+        <h1>{{ sourcePath ? (document?.title || 'Document not found') : 'linalg-checker examples and pipeline' }}</h1>
         <p class="docs-meta">
           Snapshot <a :href="`https://github.com/petervdonovan/linalg-checker/commit/${manifest.revision}`"><code>{{ manifest.revision.slice(0, 8) }}</code></a>
           <template v-if="document"> · <a :href="document.sourceUrl">{{ document.path }}</a></template>
@@ -72,7 +72,16 @@ watch(() => route.hash, scrollToLocation)
         <section>
           <h2>Output examples</h2>
           <ul class="docs-index">
-            <li v-for="entry in manifest.documents" :key="entry.path">
+            <li v-for="entry in manifest.documents.filter(entry => entry.kind === 'output')" :key="entry.path">
+              <RouterLink :to="entry.route">{{ entry.title }}</RouterLink>
+              <code>{{ entry.path }}</code>
+            </li>
+          </ul>
+        </section>
+        <section>
+          <h2>System pipeline</h2>
+          <ul class="docs-index">
+            <li v-for="entry in manifest.documents.filter(entry => entry.kind === 'documentation')" :key="entry.path">
               <RouterLink :to="entry.route">{{ entry.title }}</RouterLink>
               <code>{{ entry.path }}</code>
             </li>

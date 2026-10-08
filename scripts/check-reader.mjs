@@ -99,7 +99,11 @@ try {
     await waitFor('document.querySelector(".docs-content h1")')
     const source = await readFile(join(generatedDirectory, document.path), 'utf8')
     assert.equal(await evaluate('document.querySelectorAll(".docs-content h1").length'), [...source.matchAll(/^# /gm)].length, document.path)
-    assert(await evaluate('document.querySelectorAll(".docs-content .katex").length > 0'), document.path)
+    if (document.kind === 'output')
+      assert(await evaluate('document.querySelectorAll(".docs-content .katex").length > 0'), document.path)
+    const diagrams = [...source.matchAll(/^```mermaid/gm)].length
+    if (diagrams)
+      await waitFor(`Array.from(document.querySelectorAll(".docs-content .mermaid")).filter(element => element.shadowRoot?.querySelector("svg")).length === ${diagrams}`)
     assert(await evaluate('document.querySelector(".docs-content h1").id.length > 0'), 'Heading anchors missing')
     assert(await evaluate('getComputedStyle(document.querySelector(".docs-reader")).overflowY === "auto"'))
     await evaluate('document.querySelector(".docs-reader").scrollTop = document.querySelector(".docs-reader").scrollHeight')
@@ -119,7 +123,7 @@ try {
   const unexpected = [...consoleErrors].filter(error => !error.startsWith('Failed to patch FloatingVue'))
   assert.deepEqual(unexpected, [])
   if (consoleErrors.size) console.log('Existing FloatingVue tooltip compatibility warning remains; no uncaught browser exceptions.')
-  console.log('Index, output documents, math, details, scrolling, direct URLs and presentation navigation passed.')
+  console.log('Index, published documents, math, diagrams, details, scrolling, direct URLs and presentation navigation passed.')
 }
 finally {
   socket?.close()
