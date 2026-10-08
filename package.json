@@ -3,9 +3,11 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "build": "slidev build",
-    "dev": "slidev --open",
-    "export": "slidev export"
+    "docs:prepare": "node scripts/prepare-docs.mjs",
+    "build": "node scripts/build-site.mjs",
+    "dev": "node scripts/prepare-docs.mjs && slidev --open",
+    "export": "node scripts/prepare-docs.mjs && slidev export",
+    "test:docs": "node --test scripts/docs.test.mjs"
   },
   "dependencies": {
     "@slidev/cli": "^53.0.0",

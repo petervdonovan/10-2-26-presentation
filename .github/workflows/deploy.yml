@@ -21,6 +21,13 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
+      - name: Checkout current linalg-checker documentation
+        uses: actions/checkout@v7
+        with:
+          repository: petervdonovan/linalg-checker
+          ref: main
+          path: .sources/linalg-checker
+
       - uses: actions/setup-node@v6
         with:
           node-version: 'lts/*'
@@ -33,6 +40,8 @@ jobs:
 
       - name: Build
         run: nr build --base /${{github.event.repository.name}}/
+        env:
+          LINALG_CHECKER_DIR: .sources/linalg-checker
 
       - name: Setup Pages
         uses: actions/configure-pages@v6

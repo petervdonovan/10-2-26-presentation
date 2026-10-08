@@ -13,6 +13,8 @@ comark: true
 
 Lightweight checking for undergraduate-level finite-dimensional linear algebra
 
+Read the [complete output examples](/docs/).
+
 ---
 
 ## Clarifications wrt scope
