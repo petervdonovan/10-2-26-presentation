@@ -33,7 +33,7 @@ Read the [complete output examples](/docs/).
 ## Original motivation (perhaps naive)
 
 - When people write proofs, they usually assert **universally quantified statements** $\forall n_1, n_2, \dots, x_1, x_2, \dots \,, \phi(n_1, n_2, \dots, x_1, x_2, \dots)$
-- **Naively,** I said: "existentially quantified statements are easy to prove! **Just** fuzz and exhibit a witness like software testing folks do"
+- **Naively,** I said: "existentially quantified statements are easy to prove! **Just** fuzz and exhibit a witness like software testers do"
 - Proving student-written claims true is an unsatisfactory solution on its own
   - It costs latency/$$$ to try to **prove falsehoods**
 
@@ -54,7 +54,7 @@ Read the [complete output examples](/docs/).
 
 ---
 
-## Actual motivation
+## Actual motivation for non-neural checking
 
 <!-- - Disproving is naturally expressed as deciding an **existentially quantified formula** $\exists x_1, x_2, \dots \, \neg\phi(x_1, x_2, \dots)$ -->
 - *Cost:* **There will always be "easy" problems** for which symbolic/non-neural algorithms are **much** cheaper/more responsive than LLMs will likely ever be
@@ -508,7 +508,7 @@ routeAlias: architecture
 
 ```mermaid
 flowchart LR
-    MD[Markdown / TeX] --> AST["Expr&lt;()&gt;"]
+    MD[Markdown / TeX] --> AST[linalg-checker syntax]
     AST --> STE[SymbolicTypeEnvironment]
     AST --> PREP["<b>Dimension-free elaboration</b>"]
     STE --> PREP
@@ -516,9 +516,8 @@ flowchart LR
     DIM --> ENV["<b>Environment enumeration</b>"]
     PREP --> ELAB["<b>Concrete elaboration</b>"]
     ENV --> ELAB
-    ELAB --> Z3[Scalar-cell Z3 lowering]
-    Z3 --> SOLVE[Solver query]
-    SOLVE --> RESULT[Model, counterexample, or proof result]
+    ELAB --> SOLVE[Solver query]
+    SOLVE --> RESULT[Counterexample or proof result]
 ```
 
 <style>
@@ -537,13 +536,13 @@ flowchart LR
 ## Regarding CNL
 
 - Not the core motivation.
-- Orthogonal to the SMT-solving/decision procedures aspect of this prototype
+  - Orthogonal to the SMT-solving/decision procedures aspect of this prototype
 - But perhaps independently interesting:
   - Can choice of syntax cut the gordian knot of faithfulness?
-    - cosine similarity in embedding space as a poor faithfulness metric. Some directions in embedding space don't correspond to our application-specific notion of similarity?
+    - cosine similarity in embedding space between NL and FL as a poor faithfulness metric. Some directions in embedding space don't correspond to our application-specific notion of similarity?
       - option 1: don't use the embeddings
       - option 2: learn a regression model that predicts faithfulness from embeddings
-      - option 3: **eliminate/discourage differences along the irrelevant directions**
+      - option 3: **remove differences along the irrelevant directions**
 - Newly feasible because with LLMs, users don't need to write a CNL -- they just have to read it
 - Related: Bool, Prameya (see Arnav's post)
 
@@ -571,12 +570,12 @@ Why reign in "wide wall"?
 
 ## Future work: applications, evaluations?
 
-- Lower **linalg-checker IR &rarr; Lean**?
-  - A competing approach to the existing scaffolder?
-- Lift **Lean &rarr; linalg-checker IR**?
+- Lower **linalg-checker syntax &rarr; Lean**?
+  - A competing approach to the existing preprocessor/scaffolder?
+- Lift **Lean &rarr; linalg-checker syntax**?
   - Could allow use of linalg-checker in tactics
-- Graceful handling of unsupported expressions (**graceful degradation** as an explicit "wide wall" compromise)
-  - Because each step "makes sense" on its own, it is OK if some steps aren't supported by the IR or by the validation procedure
+<!-- - Graceful handling of unsupported expressions (**graceful degradation** as an explicit "wide wall" compromise)
+  - Because each step "makes sense" on its own, it is OK if some steps aren't supported by the IR or by the validation procedure -->
 - Use in lemma library learning to **filter candidate lemmas**?
 - **Syntax/cultural-alignment/generality evaluation**?
   - can a language model + cultural context model without special knowledge of the system emit inputs that are accepted by the system?
