@@ -1,18 +1,25 @@
 import { posix } from 'node:path'
 
 export const sourceRepository = 'https://github.com/petervdonovan/linalg-checker'
+export const siteSourceRepository = 'https://github.com/petervdonovan/10-2-26-presentation'
+export const localDocumentationPath = 'docs/short-proof-smt-solving-proposal.md'
 
 export function selectPublishedFiles(files) {
   return files.filter(path => /(?:^|[/._])output\.md$/.test(path)
     || /^docs\/pipeline[-_]overview\.md$/.test(path)).sort()
 }
 
-export function documentRoute(path) {
-  return `/docs/${path.slice(0, -3)}/`
+export function selectLocalDocumentationFiles(files) {
+  return files.filter(path => path === localDocumentationPath).sort()
 }
 
-export function sourceUrl(path, revision, directory = false) {
-  return `${sourceRepository}/${directory ? 'tree' : 'blob'}/${revision}/${path.split('/').map(encodeURIComponent).join('/')}`
+export function documentRoute(path) {
+  const documentPath = path.startsWith('docs/') ? path.slice('docs/'.length) : path
+  return `/docs/${documentPath.slice(0, -3)}/`
+}
+
+export function sourceUrl(path, revision, directory = false, repository = sourceRepository) {
+  return `${repository}/${directory ? 'tree' : 'blob'}/${revision}/${path.split('/').map(encodeURIComponent).join('/')}`
 }
 
 export function rewriteDocumentLink(href, sourcePath, manifest) {

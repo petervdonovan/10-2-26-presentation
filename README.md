@@ -10,13 +10,14 @@ Edit the [slides.md](./slides.md) to see the changes.
 
 Learn more about Slidev at the [documentation](https://sli.dev/).
 
-## Output examples and pipeline overview
+## Output examples and documentation
 
 Visit `/docs/` on the same site for the document index and complete scrollable
-output snapshots from `linalg-checker`, plus `docs/pipeline-overview.md`.
-Files named `output.md`, `*.output.md`, or `*_output.md` are published along
-with this pipeline overview. Inputs, READMEs, and other design docs are omitted;
-links to them open their original GitHub source files.
+output snapshots from `linalg-checker`, plus `docs/pipeline-overview.md` and
+`docs/short-proof-smt-solving-proposal.md`. Files named `output.md`,
+`*.output.md`, or `*_output.md` are published under Output examples; the pipeline
+overview and proposal appear under Documentation. Other Markdown files are
+omitted; links to source files open their original GitHub pages.
 The reading pages use Slidev's Markdown, KaTeX, Mermaid, and code highlighting.
 
 Development, build, and export commands generate the pages from the adjacent

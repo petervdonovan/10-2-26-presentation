@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
-import { documentRoute, rewriteDocumentLink, selectPublishedFiles, sourceUrl } from './docs-lib.mjs'
+import { documentRoute, localDocumentationPath, rewriteDocumentLink, selectLocalDocumentationFiles, selectPublishedFiles, siteSourceRepository, sourceUrl } from './docs-lib.mjs'
 
 test('publishes outputs and the pipeline overview, excluding other Markdown', () => {
   const files = [
@@ -15,6 +15,16 @@ test('publishes outputs and the pipeline overview, excluding other Markdown', ()
     'examples/successes.output.md', 'output.md',
     'tests/a_output.md', 'tests/b.output.md', 'tests/output.md',
   ])
+})
+
+test('selects the local proposal for publication and excludes other local Markdown', () => {
+  assert.deepEqual(selectLocalDocumentationFiles([
+    'README.md', 'docs/design-notes.md', localDocumentationPath,
+  ]), [localDocumentationPath])
+  assert.equal(sourceUrl(localDocumentationPath, 'main', false, siteSourceRepository),
+    `${siteSourceRepository}/blob/main/docs/short-proof-smt-solving-proposal.md`)
+  assert.equal(documentRoute(localDocumentationPath), '/docs/short-proof-smt-solving-proposal/')
+  assert.equal(documentRoute('docs/pipeline-overview.md'), '/docs/pipeline-overview/')
 })
 
 const manifest = {

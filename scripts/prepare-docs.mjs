@@ -1,8 +1,8 @@
 import { execFileSync } from 'node:child_process'
-import { copyFile, mkdir, readFile, rm, writeFile } from 'node:fs/promises'
+import { copyFile, mkdir, readFile, readdir, rm, writeFile } from 'node:fs/promises'
 import { resolve, dirname } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
-import { documentRoute, selectPublishedFiles, sourceUrl } from './docs-lib.mjs'
+import { documentRoute, localDocumentationPath, selectLocalDocumentationFiles, selectPublishedFiles, siteSourceRepository, sourceUrl } from './docs-lib.mjs'
 
 export const projectRoot = fileURLToPath(new URL('../', import.meta.url))
 export const generatedDirectory = resolve(projectRoot, '.generated/linalg-docs')
@@ -29,11 +29,21 @@ export async function prepareDocs() {
       : (await readFile(destination, 'utf8')).match(/^#\s+(.+)$/m)?.[1] || 'Pipeline overview'
     documents.push({ path, route: documentRoute(path), title, kind: output ? 'output' : 'documentation', sourceUrl: sourceUrl(path, revision) })
   }
+  const localMarkdownFiles = (await readdir(resolve(projectRoot, 'docs')))
+    .filter(path => path.endsWith('.md'))
+    .map(path => `docs/${path}`)
+  for (const path of selectLocalDocumentationFiles(localMarkdownFiles)) {
+    const destination = resolve(generatedDirectory, path)
+    await mkdir(dirname(destination), { recursive: true })
+    await copyFile(resolve(projectRoot, path), destination)
+    const title = (await readFile(destination, 'utf8')).match(/^#\s+(.+)$/m)?.[1] || 'Documentation'
+    documents.push({ path, route: documentRoute(path), title, kind: 'documentation', sourceUrl: sourceUrl(path, 'main', false, siteSourceRepository) })
+  }
   documents.sort((a, b) => a.path.localeCompare(b.path))
   const manifest = { revision, files, documents }
   await writeFile(resolve(generatedDirectory, 'manifest.json'), JSON.stringify(manifest, null, 2) + '\n')
   await writeFile(resolve(generatedDirectory, 'loaders.ts'), `export default {\n${documents.map(document => `  ${JSON.stringify(document.path)}: () => import(${JSON.stringify('./' + document.path)}),`).join('\n')}\n}\n`)
-  console.log(`Prepared ${documents.length} documents from linalg-checker ${revision.slice(0, 8)}`)
+  console.log(`Prepared ${documents.length} documentation pages with linalg-checker ${revision.slice(0, 8)}`)
   return manifest
 }
 

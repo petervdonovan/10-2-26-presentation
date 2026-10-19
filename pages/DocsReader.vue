@@ -51,7 +51,11 @@ watch(() => route.hash, scrollToLocation)
 </script>
 
 <template>
-  <div ref="reader" class="docs-reader">
+  <div
+    ref="reader"
+    class="docs-reader"
+    :class="{ 'docs-reader--proposal': document?.path === 'docs/short-proof-smt-solving-proposal.md' }"
+  >
     <div class="docs-page">
       <nav aria-label="Documentation navigation">
         <RouterLink to="/docs/">Document index</RouterLink>
@@ -59,7 +63,7 @@ watch(() => route.hash, scrollToLocation)
         <a :href="`https://github.com/petervdonovan/linalg-checker/tree/${manifest.revision}`">linalg-checker source</a>
       </nav>
       <header>
-        <h1>{{ sourcePath ? (document?.title || 'Document not found') : 'linalg-checker examples and pipeline' }}</h1>
+        <h1 v-if="!document">{{ sourcePath ? 'Document not found' : 'linalg-checker examples and documentation' }}</h1>
         <p class="docs-meta">
           Snapshot <a :href="`https://github.com/petervdonovan/linalg-checker/commit/${manifest.revision}`"><code>{{ manifest.revision.slice(0, 8) }}</code></a>
           <template v-if="document"> · <a :href="document.sourceUrl">{{ document.path }}</a></template>
@@ -79,7 +83,7 @@ watch(() => route.hash, scrollToLocation)
           </ul>
         </section>
         <section>
-          <h2>System pipeline</h2>
+          <h2>Documentation</h2>
           <ul class="docs-index">
             <li v-for="entry in manifest.documents.filter(entry => entry.kind === 'documentation')" :key="entry.path">
               <RouterLink :to="entry.route">{{ entry.title }}</RouterLink>
@@ -107,6 +111,7 @@ watch(() => route.hash, scrollToLocation)
   line-height: 1.65;
   font-size: 16px;
 }
+.docs-reader--proposal { font-size: 14px; }
 .docs-page { max-width: 80ch; margin: 0 auto; padding: 1.5rem; }
 .docs-reader nav { display: flex; flex-wrap: wrap; gap: 0.5rem 1.5rem; margin-bottom: 2rem; }
 .docs-reader a { color: #165fba; text-decoration: underline; text-underline-offset: 0.15em; }
